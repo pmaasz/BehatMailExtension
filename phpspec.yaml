@@ -1,4 +1,0 @@
-suites:
-  main_suite:
-    namespace: BehatMailExtension
-    psr4_prefix: BehatMailExtension

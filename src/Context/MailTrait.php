@@ -1,6 +1,6 @@
 <?php
 
-namespace tPayne\BehatMailExtension\Context;
+namespace BehatMailExtension\Context;
 
 use BehatMailExtension\Driver\MailDriverInterface;
 

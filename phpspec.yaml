@@ -1,4 +1,4 @@
 suites:
   main_suite:
-    namespace: octopus\BehatMailExtension
-    psr4_prefix: octopus\BehatMailExtension
+    namespace: BehatMailExtension
+    psr4_prefix: BehatMailExtension

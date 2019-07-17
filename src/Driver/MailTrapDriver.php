@@ -10,7 +10,7 @@ use Entity\BehatMailExtension\Message;
  *
  * @author Philip Maass <pmaass@databay.de>
  */
-class MailboxDriver extends Driver implements MailDriverInterface
+class MailTrapDriver extends Driver implements MailDriverInterface
 {
     /**
      * @var Client

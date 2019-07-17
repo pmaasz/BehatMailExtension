@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
  *
  * @author Philip Maass <pmaass@databay.de>
  */
-class MailDriver extends Driver implements MailDriverInterface
+class MailCatcherDriver extends Driver implements MailDriverInterface
 {
     /**
      * @var Client

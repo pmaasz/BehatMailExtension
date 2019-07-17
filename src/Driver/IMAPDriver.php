@@ -121,16 +121,21 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
-     * @return Message|void
      */
     public function getLatestMessage()
     {
         // TODO: Implement getLatestMessage() method.
     }
 
+    public function searchMessage()
+    {
+
+    }
+
     /**
+     * @param MailboxInterface[] $messages
      */
-    public function deleteMessages()
+    public function deleteMessages(array $messages)
     {
         // TODO: Implement deleteMessages() method.
     }

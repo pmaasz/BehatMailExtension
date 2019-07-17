@@ -3,7 +3,6 @@
 namespace BehatMailExtension\Driver;
 
 use Ddeboer\Imap\MailboxInterface;
-use Entity\BehatMailExtension\Message;
 
 /**
  * Interface MailDriver
@@ -15,21 +14,24 @@ interface MailDriverInterface
     /**
      * Get the latest message
      *
-     * @return Message
      */
     public function getLatestMessage();
+
+    public function searchMessages();
+
 
     /**
      * Get all messages
      *
      * @param MailboxInterface $mailbox
      *
-     * @return Message[]
      */
     public function getMessages(MailboxInterface $mailbox);
 
     /**
      * Delete the messages from the inbox
+     *
+     * @param MailboxInterface[] $messages
      */
-    public function deleteMessages();
+    public function deleteMessages(array $messages);
 }

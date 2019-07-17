@@ -11,7 +11,7 @@ use Entity\BehatMailExtension\Message;
 /**
  * Class IMAPDriver
  *
- * @author Philip Maass <pmaass@databay.de>
+ * @author Philip Maaß <PhilipMaasz@aol.com>
  */
 class IMAPDriver implements MailDriverInterface
 {
@@ -119,7 +119,7 @@ class IMAPDriver implements MailDriverInterface
     /**
      * @return Message[]|void
      */
-    public function getMessages()
+    public function getMessages($mailbox )
     {
         // TODO: Implement getMessages() method.
     }

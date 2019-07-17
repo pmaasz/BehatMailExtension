@@ -8,7 +8,7 @@ use BehatMailExtension\Driver\MailDriverInterface;
 /**
  * Class MailAwareContext
  *
- * @author Philip Maass <pmaass@databay.de>
+ * @author Philip Maaß <PhilipMaasz@aol.com>
  */
 interface MailAwareContext extends Context
 {

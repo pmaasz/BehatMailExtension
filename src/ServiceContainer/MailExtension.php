@@ -8,8 +8,6 @@ use Behat\Testwork\ServiceContainer\ExtensionManager;
 
 use BehatMailExtension\Driver\IMAPDriver;
 use BehatMailExtension\Driver\MailDriverInterface;
-use BehatMailExtension\Driver\MailTrapDriver;
-use BehatMailExtension\Driver\MailCatcherDriver;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -19,7 +17,7 @@ use Symfony\Component\DependencyInjection\Definition;
 /**
  * Class MailExtension
  *
- * @author Philip Maass <pmaass@databay.de>
+ * @author Philip Maaß <PhilipMaasz@aol.com>
  */
 class MailExtension implements Extension
 {
@@ -92,12 +90,6 @@ class MailExtension implements Extension
         $driver = null;
 
         switch ($config['driver']) {
-            case 'mailcatcher':
-                $driver = new MailCatcherDriver($config);
-                break;
-            case 'mailtrap':
-                $driver = new MailTrapDriver($config);
-                break;
             case 'imap':
                 $driver = new IMAPDriver($config);
                 break;

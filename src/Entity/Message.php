@@ -5,7 +5,7 @@ namespace Entity\BehatMailExtension;
 /**
  * Class Message
  *
- * @author Philip Maass <pmaass@databay.de>
+ * @author Philip Maaß <PhilipMaasz@aol.com>
  */
 class Message
 {

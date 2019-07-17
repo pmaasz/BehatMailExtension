@@ -9,7 +9,7 @@ use BehatMailExtension\Driver\MailDriverInterface;
 /**
  * Class MailAwareInitializer
  *
- * @author Philip Maass <pmaass@databay.de>
+ * @author Philip Maaß <PhilipMaasz@aol.com>
  */
 class MailAwareInitializer implements ContextInitializer
 {

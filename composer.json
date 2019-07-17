@@ -1,11 +1,11 @@
 {
-  "name": "octopus/behat-mail-extension",
+  "name": "pmaasz/behat-mail-extension",
   "description": "An extension for testing emails with Behat",
   "license": "MIT",
   "authors": [
     {
       "name": "Philip Maaß",
-      "email": "pmaass@databay.de"
+      "email": "PhilipMaasz@aol.com"
     }
   ],
 

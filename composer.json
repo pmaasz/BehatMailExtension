@@ -1,0 +1,28 @@
+{
+  "name": "octopus/behat-mail-extension",
+  "description": "An extension for testing emails with Behat",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Philip Maaß",
+      "email": "pmaass@databay.de"
+    }
+  ],
+
+  "require": {
+    "guzzlehttp/guzzle": "^6.2",
+    "behat/behat": "^3.0"
+  },
+
+  "require-dev": {
+    "phpspec/phpspec": "^2.1"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "BehatMailExtension\\": "src/"
+    }
+  },
+
+  "minimum-stability": "stable"
+}

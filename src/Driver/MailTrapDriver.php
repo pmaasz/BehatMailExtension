@@ -10,7 +10,7 @@ use Entity\BehatMailExtension\Message;
  *
  * @author Philip Maass <pmaass@databay.de>
  */
-class MailTrapDriver extends Driver implements MailDriverInterface
+class MailTrapDriver implements MailDriverInterface
 {
     /**
      * @var Client
@@ -30,7 +30,7 @@ class MailTrapDriver extends Driver implements MailDriverInterface
     public function __construct(array $config)
     {
         $this->client = new Client([
-            'base_uri' => 'https://mailtrap.io',
+            'base_url' => 'https://mailtrap.io',
             'headers' => [
                 'Api-Token' => $config['api_key'],
             ],

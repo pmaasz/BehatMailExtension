@@ -9,6 +9,9 @@
     <li>
         <a href="https://mailtrap.io/">MailTrap</a>
     </li>
+    <li>
+        <a href="https://github.com/ddeboer/imap">IMAP</a>
+    </li>
 </ul>
 
 ## Configure Your Context ##
@@ -41,7 +44,7 @@ Chose one of the following configurations for your behat.yml file.
 If no drivers are specified the following defaults will be used:
 
 driver: mailcatcher
-base_uri: localhost
+base_url: localhost
 http_port: 1080
 
 ````
@@ -59,7 +62,7 @@ default:
     extensions:
         BehatMailExtension\ServiceContainer\MailExtension:
             driver: mailcatcher
-            base_uri: localhost # optional
+            base_url: localhost # optional
             http_port: 1080 # optional
 ````
 
@@ -74,6 +77,21 @@ default:
             driver: mailtrap
             api_key: MAIL_TRAP_KEY
             mailbox_id: MAILBOX_ID
+````
+
+### IMAP ###
+
+Add the MailExtension to your behat.yaml file:
+
+````
+default:
+    extensions:
+        BehatMailExtension\ServiceContainer\MailExtension:
+            driver: imap
+            server: 'imap.gmail.com' //required
+            port: //defaults to '993'
+            flags: //defaults to '/imap/ssl/validate-cert'
+            parameters:
 ````
 
 ## Usage ##

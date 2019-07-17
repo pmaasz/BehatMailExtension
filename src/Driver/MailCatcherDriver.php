@@ -10,7 +10,7 @@ use GuzzleHttp\Client;
  *
  * @author Philip Maass <pmaass@databay.de>
  */
-class MailCatcherDriver extends Driver implements MailDriverInterface
+class MailCatcherDriver implements MailDriverInterface
 {
     /**
      * @var Client
@@ -24,9 +24,9 @@ class MailCatcherDriver extends Driver implements MailDriverInterface
      */
     public function __construct(array $config)
     {
-        $url = 'http://' . $config['base_uri'] . ':' . $config['http_port'];
+        $url = 'http://' . $config['base_url'] . ':' . $config['http_port'];
 
-        $this->client = new Client(['base_uri' => $url]);
+        $this->client = new Client(['base_url' => $url]);
     }
 
     /**

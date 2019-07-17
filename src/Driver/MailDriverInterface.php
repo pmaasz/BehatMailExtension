@@ -27,8 +27,6 @@ interface MailDriverInterface
 
     /**
      * Delete the messages from the inbox
-     *
-     * @return mixed
      */
     public function deleteMessages();
 }

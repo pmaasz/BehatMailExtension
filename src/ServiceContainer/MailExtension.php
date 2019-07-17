@@ -6,6 +6,8 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use BehatMailExtension\Driver\Driver;
+use BehatMailExtension\Driver\IMAPDriver;
+use BehatMailExtension\Driver\MailDriverInterface;
 use BehatMailExtension\Driver\MailTrapDriver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -64,9 +66,9 @@ class MailExtension implements Extension
         $builder
             ->children()
             ->scalarNode('driver')
-            ->defaultValue('mailcatcher')
+            ->defaultValue('imap')
             ->end()
-            ->scalarNode('base_uri')
+            ->scalarNode('base_url')
             ->defaultValue('localhost')
             ->end()
             ->scalarNode('http_port')
@@ -94,6 +96,9 @@ class MailExtension implements Extension
             case 'mailtrap':
                 $driver = new MailTrapDriver($config);
                 break;
+            case 'imap':
+                $driver = new IMAPDriver($config);
+                break;
         }
 
         if($driver)
@@ -104,9 +109,9 @@ class MailExtension implements Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param Driver $driver
+     * @param MailDriverInterface $driver
      */
-    private function loadInitializer(ContainerBuilder $container, Driver $driver)
+    private function loadInitializer(ContainerBuilder $container, MailDriverInterface $driver)
     {
         $definition = new Definition('BehatMailExtension\Context\MailAwareInitializer', [$driver]);
         $definition->addTag(ContextExtension::INITIALIZER_TAG, ['priority' => 0]);

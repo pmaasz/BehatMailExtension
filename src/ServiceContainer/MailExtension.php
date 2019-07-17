@@ -108,7 +108,7 @@ class MailExtension implements Extension
      */
     private function loadInitializer(ContainerBuilder $container, Driver $driver)
     {
-        $definition = new Definition('tPayne\BehatMailExtension\Context\MailAwareInitializer', [$driver]);
+        $definition = new Definition('BehatMailExtension\Context\MailAwareInitializer', [$driver]);
         $definition->addTag(ContextExtension::INITIALIZER_TAG, ['priority' => 0]);
 
         $container->setDefinition('mail.initializer', $definition);

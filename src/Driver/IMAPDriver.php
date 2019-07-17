@@ -5,8 +5,10 @@ namespace BehatMailExtension\Driver;
 
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
+use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Server;
 use Entity\BehatMailExtension\Message;
+use const LATT_NOSELECT;
 
 /**
  * Class IMAPDriver
@@ -63,7 +65,7 @@ class IMAPDriver implements MailDriverInterface
         foreach ($mailboxes as $mailbox) {
             // Skip container-only mailboxes
             // @see https://secure.php.net/manual/en/function.imap-getmailboxes.php
-            if ($mailbox->getAttributes() & \LATT_NOSELECT) {
+            if ($mailbox->getAttributes() & LATT_NOSELECT) {
                 continue;
             }
 
@@ -109,19 +111,21 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
+     * @param MailboxInterface $mailbox
+     *
+     * @return MessageIteratorInterface $mailbox
+     */
+    public function getMessages(MailboxInterface $mailbox)
+    {
+        return $mailbox->getMessages();
+    }
+
+    /**
      * @return Message|void
      */
     public function getLatestMessage()
     {
         // TODO: Implement getLatestMessage() method.
-    }
-
-    /**
-     * @return Message[]|void
-     */
-    public function getMessages($mailbox )
-    {
-        // TODO: Implement getMessages() method.
     }
 
     /**

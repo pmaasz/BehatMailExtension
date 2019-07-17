@@ -2,6 +2,7 @@
 
 namespace BehatMailExtension\Driver;
 
+use Ddeboer\Imap\MailboxInterface;
 use Entity\BehatMailExtension\Message;
 
 /**
@@ -21,9 +22,11 @@ interface MailDriverInterface
     /**
      * Get all messages
      *
+     * @param MailboxInterface $mailbox
+     *
      * @return Message[]
      */
-    public function getMessages();
+    public function getMessages(MailboxInterface $mailbox);
 
     /**
      * Delete the messages from the inbox

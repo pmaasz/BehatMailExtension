@@ -2,6 +2,8 @@
 
 namespace BehatMailExtension\Driver;
 
+use Entity\BehatMailExtension\Message;
+
 /**
  * Interface MailDriver
  *
@@ -12,14 +14,14 @@ interface MailDriverInterface
     /**
      * Get the latest message
      *
-     * @return mixed
+     * @return Message
      */
     public function getLatestMessage();
 
     /**
      * Get all messages
      *
-     * @return array[]
+     * @return Message[]
      */
     public function getMessages();
 
@@ -29,11 +31,4 @@ interface MailDriverInterface
      * @return mixed
      */
     public function deleteMessages();
-
-    /**
-     * Get Message by some criteria
-     *
-     * @return mixed
-     */
-    public function getMessageBy();
 }

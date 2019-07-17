@@ -4,12 +4,6 @@
 
 <ul>
     <li>
-        <a href="https://mailcatcher.me/">MailCatcher</a>
-    </li>
-    <li>
-        <a href="https://mailtrap.io/">MailTrap</a>
-    </li>
-    <li>
         <a href="https://github.com/ddeboer/imap">IMAP</a>
     </li>
 </ul>
@@ -18,7 +12,7 @@
 
 1) Implement the MailAwareContext in your feature context
 
-2) Use the Mail trait in your context.
+2) Use the MailTrait in your context.
 
 
 ````
@@ -36,48 +30,6 @@ Using the mail trait will add a mail property to your feature context.
 
 
 ## behat.yml ##
-
-Chose one of the following configurations for your behat.yml file.
-
-#### Defaults ####
-
-If no drivers are specified the following defaults will be used:
-
-driver: mailcatcher
-base_url: localhost
-http_port: 1080
-
-````
-default:
-    extensions:
-        BehatMailExtension\ServiceContainer\MailExtension
-````
-
-#### MailCatcher ####
-
-Add the MailExtension to your behat.yml file:
-
-````
-default:
-    extensions:
-        BehatMailExtension\ServiceContainer\MailExtension:
-            driver: mailcatcher
-            base_url: localhost # optional
-            http_port: 1080 # optional
-````
-
-#### MailTrap ####
-
-Add the MailExtension to your behat.yaml file:
-
-````
-default:
-    extensions:
-        BehatMailExtension\ServiceContainer\MailExtension:
-            driver: mailtrap
-            api_key: MAIL_TRAP_KEY
-            mailbox_id: MAILBOX_ID
-````
 
 ### IMAP ###
 

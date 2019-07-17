@@ -7,7 +7,7 @@ use BehatMailExtension\Driver\MailDriverInterface;
 /**
  * Trait MailTrait
  *
- * @package tPayne\BehatMailExtension\Context
+ * @package BehatMailExtension\Context
  */
 trait MailTrait
 {

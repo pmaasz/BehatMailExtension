@@ -56,6 +56,23 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
+     * @param MailboxInterface[] $mailboxes
+     */
+    public function analyzeMailboxes($mailboxes)
+    {
+        foreach ($mailboxes as $mailbox) {
+            // Skip container-only mailboxes
+            // @see https://secure.php.net/manual/en/function.imap-getmailboxes.php
+            if ($mailbox->getAttributes() & \LATT_NOSELECT) {
+                continue;
+            }
+
+            // $mailbox is instance of \Ddeboer\Imap\Mailbox
+            printf('Mailbox "%s" has %s messages', $mailbox->getName(), $mailbox->count());
+        }
+    }
+
+    /**
      * @param string $name
      *
      * @return MailboxInterface
@@ -63,6 +80,32 @@ class IMAPDriver implements MailDriverInterface
     public function getMailbox($name)
     {
         return $this->connection->getMailbox($name);
+    }
+
+    /**
+     * @param MailboxInterface $mailbox
+     */
+    public function analyzeMailbox($mailbox)
+    {
+        printf('Mailbox "%s" has %s messages', $mailbox->getName(), $mailbox->count());
+    }
+
+    /**
+     * @param MailboxInterface $mailbox
+     * @param string $flag
+     * @param array $numbers
+     */
+    public function setMailboxFlag($mailbox, $flag, $numbers)
+    {
+        $mailbox->setFlag($flag, $numbers);
+    }
+
+    /**
+     * @param MailboxInterface $mailbox
+     */
+    public function deleteMailbox($mailbox)
+    {
+        $this->connection->deleteMailbox($mailbox);
     }
 
     /**

@@ -13,7 +13,8 @@
     "guzzlehttp/guzzle": "^6.2",
     "behat/behat": "^3.0",
     "ddeboer/imap": "^1.8",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-imap": "*"
   },
 
   "require-dev": {

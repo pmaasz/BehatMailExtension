@@ -68,15 +68,14 @@ class MailExtension implements Extension
             ->scalarNode('driver')
             ->defaultValue('imap')
             ->end()
-            ->scalarNode('base_url')
+            ->scalarNode('server')
             ->defaultValue('localhost')
             ->end()
-            ->scalarNode('http_port')
-            ->defaultValue(1080)
+            ->scalarNode('port')
+            ->defaultValue(993)
             ->end()
-            ->scalarNode('api_key')
-            ->end()
-            ->scalarNode('mailbox_id');
+            ->scalarNode('flags')
+            ->defaultValue('/imap/ssl/validate-cert');
     }
 
     /**

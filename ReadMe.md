@@ -47,7 +47,7 @@ http_port: 1080
 ````
 default:
     extensions:
-        tPayne\BehatMailExtension\ServiceContainer\MailExtension
+        BehatMailExtension\ServiceContainer\MailExtension
 ````
 
 #### MailCatcher ####
@@ -57,7 +57,7 @@ Add the MailExtension to your behat.yml file:
 ````
 default:
     extensions:
-        tPayne\BehatMailExtension\ServiceContainer\MailExtension:
+        BehatMailExtension\ServiceContainer\MailExtension:
             driver: mailcatcher
             base_uri: localhost # optional
             http_port: 1080 # optional
@@ -70,7 +70,7 @@ Add the MailExtension to your behat.yaml file:
 ````
 default:
     extensions:
-        tPayne\BehatMailExtension\ServiceContainer\MailExtension:
+        BehatMailExtension\ServiceContainer\MailExtension:
             driver: mailtrap
             api_key: MAIL_TRAP_KEY
             mailbox_id: MAILBOX_ID

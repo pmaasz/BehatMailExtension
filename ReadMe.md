@@ -42,13 +42,12 @@ Add the MailExtension to your behat.yaml file:
 default:
     extensions:
         BehatMailExtension\ServiceContainer\MailExtension:
-            driver: imap
+            driver: imap //required
             server: 'imap.gmail.com' //required
-            port: //defaults to '993'
-            flags: //defaults to '/imap/ssl/validate-cert'
-            parameters:  //Connection parameters, the following (string) keys maybe used to set one or more connection parameters:
-                         //DISABLE_AUTHENTICATOR - Disable authentication properties
-
+            port: //defaults to '993' //required
+            flags: //defaults to '/imap/ssl/validate-cert' //required 
+            username: //required
+            password: //required
 ````
 
 ## Usage ##

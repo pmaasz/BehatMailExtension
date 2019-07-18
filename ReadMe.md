@@ -79,9 +79,10 @@ Access the mail property from your feature context to test any emails sent.
     }
 ````    
     
-#### The Mail Driver API ####
+#### The IMAP Driver API ####
 
-The mail driver, accessible via the mail property on the feature context, offers the following methods:
+The mail driver, accessible via the mail property on the feature context, offers the following methods.
+These methods are described in the MailDriverInterface.
 
 <ul>
     <li>

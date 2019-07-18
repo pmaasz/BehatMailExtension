@@ -166,6 +166,18 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
+     * @param string $mailboxName
+     * @param Message$message
+     */
+    public function moveMessage($mailboxName, $message)
+    {
+        $mailbox = $this->connection->getMailbox($mailboxName);
+
+        $message->move($mailbox);
+        $this->connection->expunge();
+    }
+
+    /**
      * @param MessageIteratorInterface $messages
      */
     public function deleteMessages(MessageIteratorInterface $messages)

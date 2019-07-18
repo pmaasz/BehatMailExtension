@@ -146,7 +146,7 @@ The mail driver will return a message object with the following API:
     <li>getBodyHtml()</li>
     <li>getBodyText()</li>
     <li>markAsSeen()</li>
-    <li>setFlag(string $flag)</li>
-    <li>clearFlag(string $flag)</li>
+    <li>setFlag()</li>
+    <li>clearFlag()</li>
     <li>getAttachements()</li>
 </ul>

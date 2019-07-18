@@ -16,8 +16,6 @@ interface MailAwareContext extends Context
      * Set the mail driver on the context
      *
      * @param MailDriverInterface $mail
-     *
-     * @return mixed
      */
     public function setMail(MailDriverInterface $mail);
 }

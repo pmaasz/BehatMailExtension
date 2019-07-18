@@ -14,6 +14,49 @@ use Ddeboer\Imap\MessageIteratorInterface;
 interface MailDriverInterface
 {
     /**
+     * @return MailboxInterface[]
+     */
+    public function getMailboxes();
+
+    /**
+     * @param string $name
+     *
+     * @return MailboxInterface
+     */
+    public function getMailbox($name);
+
+    /**
+     * @param MailboxInterface[] $mailboxes
+     */
+    public function analyzeMailboxes($mailboxes);
+
+    /**
+     * @param MailboxInterface $mailbox
+     */
+    public function analyzeMailbox($mailbox);
+
+    /**
+     * @param MailboxInterface $mailbox
+     * @param string $flag
+     * @param array $numbers
+     */
+    public function setMailboxFlag($mailbox, $flag, $numbers);
+
+    /**
+     * @param MailboxInterface $mailbox
+     */
+    public function deleteMailbox($mailbox);
+
+    /**
+     * Get all messages
+     *
+     * @param MailboxInterface $mailbox
+     *
+     * @return MessageIteratorInterface
+     */
+    public function getMessages(MailboxInterface $mailbox);
+
+    /**
      * Searches in a given mailbox through all messages
      *
      * @param MailboxInterface $mailbox
@@ -40,13 +83,16 @@ interface MailDriverInterface
     public function sendMessages(MessageIteratorInterface $messages);
 
     /**
-     * Get all messages
-     *
-     * @param MailboxInterface $mailbox
-     *
-     * @return MessageIteratorInterface
+     * @param string $mailboxName
+     * @param Message $message
      */
-    public function getMessages(MailboxInterface $mailbox);
+    public function moveMessage($mailboxName, Message $message);
+
+    /**
+     * @param Message $message
+     * @param string $downloadDir
+     */
+    public function downloadMessageAttachments(Message $message, $downloadDir);
 
     /**
      * Delete the messages from the inbox

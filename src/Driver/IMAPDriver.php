@@ -51,7 +51,7 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
-     * @return array|MailboxInterface[]
+     * @return MailboxInterface[]
      */
     public function getMailboxes()
     {
@@ -167,9 +167,9 @@ class IMAPDriver implements MailDriverInterface
 
     /**
      * @param string $mailboxName
-     * @param Message$message
+     * @param Message $message
      */
-    public function moveMessage($mailboxName, $message)
+    public function moveMessage($mailboxName, Message $message)
     {
         $mailbox = $this->connection->getMailbox($mailboxName);
 
@@ -181,7 +181,7 @@ class IMAPDriver implements MailDriverInterface
      * @param Message $message
      * @param string $downloadDir
      */
-    public function downloadMessageAttachments($message, $downloadDir)
+    public function downloadMessageAttachments(Message $message, $downloadDir)
     {
         $attachments = $message->getAttachments();
 

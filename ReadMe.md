@@ -112,6 +112,9 @@ The mail driver, accessible via the mail property on the feature context, offers
        searchMessages()
     </li>
     <li>
+        moveMessage()
+    </li>
+    <li>
        deleteMessage()
     </li>
     <li>

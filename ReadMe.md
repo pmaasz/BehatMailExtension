@@ -28,7 +28,6 @@ class FeatureContext implements MailAwareContext
 
 Using the mail trait will add a mail property to your feature context.
 
-
 ## behat.yml ##
 
 ### IMAP ###
@@ -86,10 +85,34 @@ The mail driver, accessible via the mail property on the feature context, offers
 
 <ul>
     <li>
+       getMailbox()
+    </li>
+    <li>
+       getMailboxes()
+    </li>
+    <li>
+       analyzeMailbox()
+    </li>
+    <li>
+       analyzeMailboxes()
+    </li>
+    <li>
+       setMailboxFlag()
+    </li>                  
+    <li>
         getMessages()
     </li>
     <li>
-        getLatestMessage()
+       sendMessage()
+    </li>
+    <li>
+       sendMessages()
+    </li>    
+    <li>
+       searchMessages()
+    </li>
+    <li>
+       deleteMessage()
     </li>
     <li>
         deleteMessages() (This is called automatically after scenarios tagged @mail)
@@ -101,10 +124,17 @@ The mail driver, accessible via the mail property on the feature context, offers
 The mail driver will return a message object with the following API:
 
 <ul>
-    <li>to()</li>
-    <li>from()</li>
-    <li>subject()</li>
-    <li>plainText()</li>
-    <li>html()</li>
-    <li>date()</li>
+    <li>getTo()</li>
+    <li>getFrom()</li>
+    <li>getDate() (DateTimeImmutable)</li>
+    <li>getSubject()</li>
+    <li>isAnswered()</li>
+    <li>isDeleted()</li>
+    <li>isDraft()</li>
+    <li>isSeen()</li>
+    <li>getBodyHtml()</li>
+    <li>getBodyText()</li>
+    <li>markAsSeen()</li>
+    <li>setFlag(string $flag)</li>
+    <li>clearFlag(string $flag)</li>
 </ul>

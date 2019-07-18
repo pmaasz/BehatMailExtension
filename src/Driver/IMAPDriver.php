@@ -7,7 +7,7 @@ use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Server;
-use Entity\BehatMailExtension\Message;
+use Ddeboer\Imap\Message;
 use const LATT_NOSELECT;
 
 /**
@@ -121,13 +121,22 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
+     * @param Message $message
+     */
+    public function sendMessage($message)
+    {
+        $mailbox = $this->connection->getMailbox('Sent');
+        $mailbox->addMessage($message, '\\Seen');
+    }
+
+    /**
      */
     public function getLatestMessage()
     {
         // TODO: Implement getLatestMessage() method.
     }
 
-    public function searchMessage()
+    public function searchMessages()
     {
 
     }

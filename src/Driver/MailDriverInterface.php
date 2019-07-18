@@ -17,6 +17,9 @@ interface MailDriverInterface
      */
     public function getLatestMessage();
 
+    /**
+     * @return mixed
+     */
     public function searchMessages();
 
 

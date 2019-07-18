@@ -10,7 +10,20 @@
 
 ## Installation ##
 
-#### This extension has not been tested yet. To use the extension in your Behat testing environment you have to download it via composer which is not possible at the moment. 
+````
+{
+     "require": {
+            "pmaasz/behat-mail-extension": "dev-master"
+        },
+    
+    "repositories": [
+            {
+                "type": "vcs",
+                "url": "https://github.com/pmaasz/BehatMailExtension.git"
+            }
+        ]
+}
+````
 
 ## Configure Your Context ##
 

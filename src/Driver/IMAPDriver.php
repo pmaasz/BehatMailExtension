@@ -186,6 +186,8 @@ class IMAPDriver implements MailDriverInterface
         {
             $message->delete();
         }
+
+        $this->connection->expunge();
     }
 
     /**
@@ -194,5 +196,6 @@ class IMAPDriver implements MailDriverInterface
     public function deleteMessage(Message $message)
     {
         $message->delete();
+        $this->connection->expunge();
     }
 }

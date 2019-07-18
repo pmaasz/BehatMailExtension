@@ -96,6 +96,12 @@ class MailExtension implements Extension
             case 'imap':
                 $driver = new IMAPDriver($config);
                 break;
+            case 'pop3':
+                $driver = null;
+                break;
+            case 'smtp':
+                $driver = null;
+                break;
         }
 
         if($driver)

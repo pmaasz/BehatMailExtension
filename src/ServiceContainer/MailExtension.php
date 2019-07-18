@@ -75,7 +75,11 @@ class MailExtension implements Extension
             ->defaultValue(993)
             ->end()
             ->scalarNode('flags')
-            ->defaultValue('/imap/ssl/validate-cert');
+            ->defaultValue('/imap/ssl/validate-cert')
+            ->end()
+            ->scalarNode('username')
+            ->end()
+            ->scalarNode('password');
     }
 
     /**

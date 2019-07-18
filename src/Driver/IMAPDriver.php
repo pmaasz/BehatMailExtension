@@ -6,6 +6,10 @@ namespace BehatMailExtension\Driver;
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
+use Ddeboer\Imap\Search\Email\From;
+use Ddeboer\Imap\Search\Email\To;
+use Ddeboer\Imap\Search\Text\Body;
+use Ddeboer\Imap\SearchExpression;
 use Ddeboer\Imap\Server;
 use Ddeboer\Imap\Message;
 use const LATT_NOSELECT;
@@ -113,7 +117,7 @@ class IMAPDriver implements MailDriverInterface
     /**
      * @param MailboxInterface $mailbox
      *
-     * @return MessageIteratorInterface $mailbox
+     * @return MessageIteratorInterface $message
      */
     public function getMessages(MailboxInterface $mailbox)
     {
@@ -123,29 +127,63 @@ class IMAPDriver implements MailDriverInterface
     /**
      * @param Message $message
      */
-    public function sendMessage($message)
+    public function sendMessage(Message $message)
     {
         $mailbox = $this->connection->getMailbox('Sent');
         $mailbox->addMessage($message, '\\Seen');
     }
 
     /**
+     * @param MessageIteratorInterface $messages
+     *
+     * @return mixed|void
      */
-    public function getLatestMessage()
+    public function sendMessages(MessageIteratorInterface $messages)
     {
-        // TODO: Implement getLatestMessage() method.
-    }
+        $mailbox = $this->connection->getMailbox('Sent');
 
-    public function searchMessages()
-    {
-
+        foreach($messages as $message)
+        {
+            $mailbox->addMessage($message, '\\Seen');
+        }
     }
 
     /**
-     * @param MailboxInterface[] $messages
+     * Be careful to add the params as the right objects
+     *
+     * @param MailboxInterface $mailbox
+     * @param array            $searchparams
+     *
+     * @return MessageIteratorInterface
      */
-    public function deleteMessages(array $messages)
+    public function searchMessages(MailboxInterface $mailbox, array $searchparams)
     {
-        // TODO: Implement deleteMessages() method.
+        $search = new SearchExpression();
+
+        foreach($searchparams as $searchparam)
+        {
+            $search->addCondition($searchparam);
+        }
+
+        return $mailbox->getMessages($search);
+    }
+
+    /**
+     * @param MessageIteratorInterface $messages
+     */
+    public function deleteMessages(MessageIteratorInterface $messages)
+    {
+        foreach($messages as $message)
+        {
+            $message->delete();
+        }
+    }
+
+    /**
+     * @param Message $message
+     */
+    public function deleteMessage(Message $message)
+    {
+        $message->delete();
     }
 }

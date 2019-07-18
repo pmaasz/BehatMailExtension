@@ -120,6 +120,9 @@ These methods are described in the MailDriverInterface.
         moveMessage()
     </li>
     <li>
+        downloadMessageAttachments()
+    </li>
+    <li>
        deleteMessage()
     </li>
     <li>
@@ -145,4 +148,5 @@ The mail driver will return a message object with the following API:
     <li>markAsSeen()</li>
     <li>setFlag(string $flag)</li>
     <li>clearFlag(string $flag)</li>
+    <li>getAttachements()</li>
 </ul>

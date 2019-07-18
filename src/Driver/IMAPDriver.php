@@ -178,6 +178,20 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
+     * @param Message $message
+     * @param string $downloadDir
+     */
+    public function downloadMessageAttachments($message, $downloadDir)
+    {
+        $attachments = $message->getAttachments();
+
+        foreach($attachments as $attachment)
+        {
+            file_put_contents($downloadDir . $attachment->getFilename(), $attachment->getDecodedContent());
+        }
+    }
+
+    /**
      * @param MessageIteratorInterface $messages
      */
     public function deleteMessages(MessageIteratorInterface $messages)

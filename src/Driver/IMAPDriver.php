@@ -35,7 +35,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function __construct(array $config)
     {
-        $this->server = new Server($config['domain'], $config['port'], $config['flags']);
+        $this->server = new Server($config['server'], $config['port'], $config['flags']);
         $this->connection = $this->connect($config);
     }
 

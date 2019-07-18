@@ -8,6 +8,10 @@
     </li>
 </ul>
 
+## Installation ##
+
+#### This extension has not been tested yet. To use the extension in your Behat testing environment you have to download it via composer which is not possible at the moment. 
+
 ## Configure Your Context ##
 
 1) Implement the MailAwareContext in your feature context

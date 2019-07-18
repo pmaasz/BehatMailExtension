@@ -72,10 +72,10 @@ Access the mail property from your feature context to test any emails sent.
      */
     public function iShouldReceiveAWelcomeEmail()
     {
-        $message = $this->mail->getLatestMessage();
+        $message = $this->MailDriverInterface->getMessages();
 
-        PHPUnit_Framework_Assert::assertEquals('Welcome!', $message->subject());
-        PHPUnit_Framework_Assert::assertContains('Please confirm your account', $message->plainText());
+        PHPUnit_Framework_Assert::assertEquals('Welcome!', $message->getSubject());
+        PHPUnit_Framework_Assert::assertContains('Please confirm your account', $message->getBodyText());
     }
 ````    
     

@@ -25,14 +25,4 @@ trait MailTrait
     {
         $this->mail = $mail;
     }
-
-    /**
-     * Clear all messages from the inbox
-     *
-     * @AfterScenario @mail
-     */
-    public function clearInbox()
-    {
-        $this->mail->deleteMessages();
-    }
 }

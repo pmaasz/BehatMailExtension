@@ -53,21 +53,6 @@ default:
 
 ## Usage ##
 
-The Behat Mail Extension will automatically clear messages from the inbox when runing scenarios tagged with @mail
-
-````
-Feature: App Registration
-  In order to join the site
-  As a guest
-  I want to register for an account
-
-  @mail
-  Scenario: Register an account
-    Given I am a guest
-    When I register for an account
-    Then I should receive a welcome email
-````  
-
 Access the mail property from your feature context to test any emails sent.
 
 ````

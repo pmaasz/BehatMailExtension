@@ -67,6 +67,14 @@ interface MailDriverInterface
     public function searchMessages(MailboxInterface $mailbox, array $searchparams);
 
     /**
+     * @param MailboxInterface $mailbox
+     * @param string $headerName
+     *
+     * @return mixed
+     */
+    public function searchMessageByHeader(MailboxInterface $mailbox, $headerName);
+
+    /**
      * Sends a message
      *
      * @param Message $message

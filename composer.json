@@ -12,13 +12,14 @@
   "require": {
     "guzzlehttp/guzzle": "^6.2",
     "behat/behat": "^3.0",
-    "ddeboer/imap": "^1.8",
+    "ddeboer/imap": "^1.9",
     "ext-json": "*",
     "ext-imap": "*"
   },
 
   "require-dev": {
-    "phpspec/phpspec": "^2.1"
+    "phpspec/phpspec": "^2.1",
+    "phpunit/phpunit": "^8.2"
   },
 
   "autoload": {
@@ -26,6 +27,13 @@
       "BehatMailExtension\\": "src/"
     }
   },
+
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/pmaasz/imap.git"
+    }
+  ],
 
   "minimum-stability": "stable"
 }

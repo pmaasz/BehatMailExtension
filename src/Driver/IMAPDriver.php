@@ -6,6 +6,7 @@ namespace BehatMailExtension\Driver;
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
+use Ddeboer\Imap\Search\Header\Header;
 use Ddeboer\Imap\SearchExpression;
 use Ddeboer\Imap\Server;
 use Ddeboer\Imap\Message;
@@ -164,6 +165,22 @@ class IMAPDriver implements MailDriverInterface
 
         return $mailbox->getMessages($search);
     }
+
+    /**
+     * @param MailboxInterface $mailbox
+     * @param string           $headerName
+     *
+     * @return MessageIteratorInterface|mixed
+     */
+    public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
+    {
+        $search = new SearchExpression();
+
+        $search->addCondition(new Header($headerName));
+
+        return $mailbox->getMessages($search);
+    }
+
 
     /**
      * @param string $mailboxName

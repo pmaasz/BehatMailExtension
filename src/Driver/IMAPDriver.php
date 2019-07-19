@@ -166,12 +166,6 @@ class IMAPDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param string           $headerName
-     *
-     * @return MessageIteratorInterface|mixed
-     */
     public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
     {
         $search = new SearchExpression();

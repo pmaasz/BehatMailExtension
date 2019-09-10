@@ -223,4 +223,8 @@ class IMAPDriver implements MailDriverInterface
         $message->delete();
         $this->connection->expunge();
     }
+
+    public function resetConnection() {
+      $this->connection->expunge();
+    }
 }

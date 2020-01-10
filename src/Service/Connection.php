@@ -29,7 +29,7 @@ class Connection
      *
      * @return ConnectionInterface
      */
-    private function connect(array $config)
+    public function connect(array $config)
     {
         $this->server = new Server($config['server'], $config['port'], $config['flags']);
 
@@ -37,7 +37,7 @@ class Connection
     }
 
     /**
-     * Database constructor.
+     * Connection constructor.
      */
     protected function __construct()
     {

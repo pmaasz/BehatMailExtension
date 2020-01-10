@@ -3,13 +3,11 @@
 namespace BehatMailExtension\Driver;
 
 use BehatMailExtension\Service\Connection;
-use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\Header\Header;
 use Ddeboer\Imap\SearchExpression;
-use Ddeboer\Imap\Server;
 use Ddeboer\Imap\Message;
 use const LATT_NOSELECT;
 
@@ -21,14 +19,9 @@ use const LATT_NOSELECT;
 class IMAPDriver implements MailDriverInterface
 {
     /**
-     * @var Server
+     * @var array
      */
-    private $server;
-
-    /**
-     * @var ConnectionInterface
-     */
-    private $connection;
+    private $config;
 
     /**
      * IMAPDriver constructor.
@@ -37,18 +30,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function __construct(array $config)
     {
-        $this->server = new Server($config['server'], $config['port'], $config['flags']);
-        $this->connection = $this->connect($config);
-    }
-
-    /**
-     * @param array  $config
-     *
-     * @return ConnectionInterface
-     */
-    private function connect(array $config)
-    {
-        return $this->server->authenticate($config['username'], $config['password']);
+        $this->config = $config;
     }
 
     /**
@@ -56,7 +38,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMailboxes()
     {
-        return $this->connection->getMailboxes();
+        return Connection::getInstance()->connect($this->config)->getMailboxes();
     }
 
     /**
@@ -83,7 +65,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMailbox($name)
     {
-        return $this->connection->getMailbox($name);
+        return Connection::getInstance()->connect($this->config)->getMailbox($name);
     }
 
     /**
@@ -109,7 +91,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function deleteMailbox($mailbox)
     {
-        $this->connection->deleteMailbox($mailbox);
+        Connection::getInstance()->connect($this->config)->deleteMailbox($mailbox);
     }
 
     /**
@@ -128,8 +110,9 @@ class IMAPDriver implements MailDriverInterface
      */
     public function sendMessage(Message $message)
     {
-        $mailbox = $this->connection->getMailbox('Sent');
+        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox('Sent');
 
+        /** @var MailboxInterface $mailbox */
         $mailbox->addMessage($message, '\\Seen');
     }
 
@@ -140,7 +123,8 @@ class IMAPDriver implements MailDriverInterface
      */
     public function sendMessages(MessageIteratorInterface $messages)
     {
-        $mailbox = $this->connection->getMailbox('Sent');
+        /** @var MailboxInterface $mailbox */
+        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox('Sent');
 
         foreach($messages as $message)
         {
@@ -190,10 +174,11 @@ class IMAPDriver implements MailDriverInterface
      */
     public function moveMessage($mailboxName, Message $message)
     {
-        $mailbox = $this->connection->getMailbox($mailboxName);
+        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox($mailboxName);
 
         $message->move($mailbox);
-        $this->connection->expunge();
+
+        $this->resetConnection();
     }
 
     /**
@@ -220,7 +205,7 @@ class IMAPDriver implements MailDriverInterface
             $message->delete();
         }
 
-        $this->connection->expunge();
+        $this->resetConnection();
     }
 
     /**
@@ -229,7 +214,8 @@ class IMAPDriver implements MailDriverInterface
     public function deleteMessage(Message $message)
     {
         $message->delete();
-        $this->connection->expunge();
+
+        $this->resetConnection();
     }
 
     /**
@@ -237,6 +223,6 @@ class IMAPDriver implements MailDriverInterface
      */
     public function resetConnection()
     {
-        $this->connection->expunge();
+        Connection::getInstance()->connect($this->config)->expunge();
     }
 }

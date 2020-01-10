@@ -34,7 +34,7 @@ trait Singleton
         {
             self::$instance = new self();
         }
-        
+
         return self::$instance;
     }
 }

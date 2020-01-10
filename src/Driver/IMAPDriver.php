@@ -1,6 +1,5 @@
 <?php
 
-
 namespace BehatMailExtension\Driver;
 
 use Ddeboer\Imap\ConnectionInterface;
@@ -39,7 +38,6 @@ class IMAPDriver implements MailDriverInterface
         $this->server = new Server($config['server'], $config['port'], $config['flags']);
         $this->connection = $this->connect($config);
     }
-
 
     /**
      * @param array  $config
@@ -166,6 +164,12 @@ class IMAPDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
+    /**
+     * @param MailboxInterface $mailbox
+     * @param string           $headerName
+     *
+     * @return MessageIteratorInterface|mixed
+     */
     public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
     {
         $search = new SearchExpression();

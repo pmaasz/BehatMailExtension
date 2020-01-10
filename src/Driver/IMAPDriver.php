@@ -2,6 +2,7 @@
 
 namespace BehatMailExtension\Driver;
 
+use BehatMailExtension\Service\Connection;
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
@@ -126,6 +127,7 @@ class IMAPDriver implements MailDriverInterface
     public function sendMessage(Message $message)
     {
         $mailbox = $this->connection->getMailbox('Sent');
+
         $mailbox->addMessage($message, '\\Seen');
     }
 

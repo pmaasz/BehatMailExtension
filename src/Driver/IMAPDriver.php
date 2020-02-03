@@ -181,7 +181,6 @@ class IMAPDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
-
     /**
      * @param string $mailboxName
      * @param Message $message
@@ -230,7 +229,11 @@ class IMAPDriver implements MailDriverInterface
         $this->connection->expunge();
     }
 
-    public function resetConnection() {
-      $this->connection->expunge();
+    /**
+     * void
+     */
+    public function resetConnection()
+    {
+        $this->connection->expunge();
     }
 }

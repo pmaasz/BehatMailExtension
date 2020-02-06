@@ -147,6 +147,7 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
+     * @TODO find a good concept to create new search and add conditions by string parameter
      * Be careful to add the params as the right objects
      *
      * @param MailboxInterface $mailbox
@@ -154,7 +155,7 @@ class IMAPDriver implements MailDriverInterface
      *
      * @return MessageIteratorInterface
      */
-    public function searchMessages(MailboxInterface $mailbox, array $searchparams)
+    /*public function searchMessages(MailboxInterface $mailbox, array $searchparams)
     {
         $search = new SearchExpression();
 
@@ -164,7 +165,7 @@ class IMAPDriver implements MailDriverInterface
         }
 
         return $mailbox->getMessages($search);
-    }
+    }*/
 
     /**
      * @param MailboxInterface $mailbox

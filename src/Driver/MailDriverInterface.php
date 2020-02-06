@@ -64,7 +64,8 @@ interface MailDriverInterface
      *
      * @return MessageIteratorInterface
      */
-    public function searchMessages(MailboxInterface $mailbox, array $searchparams);
+    // commented for future implementation
+    //public function searchMessages(MailboxInterface $mailbox, array $searchparams);
 
     /**
      * @param MailboxInterface $mailbox

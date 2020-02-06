@@ -5,6 +5,7 @@ namespace BehatMailExtension\Driver;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Message;
 use Ddeboer\Imap\MessageIteratorInterface;
+use Ddeboer\Imap\Search\ConditionInterface;
 
 /**
  * Interface MailDriver
@@ -51,10 +52,11 @@ interface MailDriverInterface
      * Get all messages
      *
      * @param MailboxInterface $mailbox
+     * @param ConditionInterface $search
      *
      * @return MessageIteratorInterface
      */
-    public function getMessages(MailboxInterface $mailbox);
+    public function getMessages(MailboxInterface $mailbox, ConditionInterface $search);
 
     /**
      * Searches in a given mailbox through all messages

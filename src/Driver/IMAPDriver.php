@@ -6,6 +6,7 @@ use BehatMailExtension\Service\Connection;
 use Ddeboer\Imap\ConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
+use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\Header\Header;
 use Ddeboer\Imap\SearchExpression;
 use Ddeboer\Imap\Server;
@@ -113,12 +114,13 @@ class IMAPDriver implements MailDriverInterface
 
     /**
      * @param MailboxInterface $mailbox
+     * @param ConditionInterface $search
      *
      * @return MessageIteratorInterface $message
      */
-    public function getMessages(MailboxInterface $mailbox)
+    public function getMessages(MailboxInterface $mailbox, ConditionInterface $search = null)
     {
-        return $mailbox->getMessages();
+        return $mailbox->getMessages($search);
     }
 
     /**

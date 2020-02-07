@@ -38,7 +38,11 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMailboxes()
     {
-        return Connection::getInstance()->connect($this->config)->getMailboxes();
+        $mailboxes = Connection::getInstance($this->config)->connect()->getMailboxes();
+
+        $this->resetConnection();
+
+        return $mailboxes;
     }
 
     /**
@@ -65,7 +69,11 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMailbox($name)
     {
-        return Connection::getInstance()->connect($this->config)->getMailbox($name);
+        $mailbox = Connection::getInstance($this->config)->connect()->getMailbox($name);
+
+        $this->resetConnection();
+
+        return $mailbox;
     }
 
     /**
@@ -91,7 +99,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function deleteMailbox($mailbox)
     {
-        Connection::getInstance()->connect($this->config)->deleteMailbox($mailbox);
+        Connection::getInstance($this->config)->connect()->deleteMailbox($mailbox);
     }
 
     /**
@@ -102,7 +110,26 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMessages(MailboxInterface $mailbox, ConditionInterface $search = null)
     {
-        return $mailbox->getMessages($search);
+        $messages = $mailbox->getMessages($search);
+
+        $this->resetConnection();
+
+        return $messages;
+    }
+
+    /**
+     * @param MailboxInterface $mailbox
+     * @param int $key
+     *
+     * @return Message $message
+     */
+    public function getMessage(MailboxInterface $mailbox, $key)
+    {
+        $message = $mailbox->getMessage($key);
+
+        $this->resetConnection();
+
+        return $message;
     }
 
     /**
@@ -111,24 +138,28 @@ class IMAPDriver implements MailDriverInterface
     public function sendMessage(Message $message)
     {
         /** @var MailboxInterface $mailbox */
-        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox('Sent');
+        $mailbox = Connection::getInstance($this->config)->connect()->getMailbox('Sent');
         $mailbox->addMessage($message, '\\Seen');
+
+        $this->resetConnection();
     }
 
     /**
      * @param MessageIteratorInterface $messages
      *
-     * @return mixed|void
+     * @return void
      */
     public function sendMessages(MessageIteratorInterface $messages)
     {
         /** @var MailboxInterface $mailbox */
-        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox('Sent');
+        $mailbox = Connection::getInstance($this->config)->connect()->getMailbox('Sent');
 
         foreach($messages as $message)
         {
             $mailbox->addMessage($message, '\\Seen');
         }
+
+        $this->resetConnection();
     }
 
     /**
@@ -161,7 +192,6 @@ class IMAPDriver implements MailDriverInterface
     public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
     {
         $search = new SearchExpression();
-
         $search->addCondition(new Header($headerName));
 
         return $mailbox->getMessages($search);
@@ -218,6 +248,6 @@ class IMAPDriver implements MailDriverInterface
      */
     public function resetConnection()
     {
-        Connection::getInstance()->connect($this->config)->expunge();
+        Connection::getInstance($this->config)->connect()->expunge();
     }
 }

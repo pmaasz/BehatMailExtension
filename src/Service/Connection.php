@@ -30,14 +30,14 @@ class Connection
     private $config;
 
     /**
-     * @param array  $config
-     *
      * @return ConnectionInterface
      */
-    public function connect(array $config)
+    public function connect()
     {
         if($this->connection->ping())
         {
+            $config = $this->config;
+
             return $this->server->authenticate($config['username'], $config['password']);
         }
     }
@@ -51,10 +51,13 @@ class Connection
     }
     /**
      * Connection constructor.
+     *
+     * @param array $config
      */
-    protected function __construct()
+    protected function __construct(array $config)
     {
-        $config = [];
+        $this->config = $config;
+
         $this->server = new Server($config['server'], $config['port'], $config['flags']);
         $this->connection = $this->server->authenticate($config['username'], $config['password']);
     }

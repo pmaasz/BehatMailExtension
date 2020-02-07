@@ -40,7 +40,7 @@ class IMAPDriver implements MailDriverInterface
     {
         $mailboxes = Connection::getInstance($this->config)->connect()->getMailboxes();
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
 
         return $mailboxes;
     }
@@ -71,7 +71,7 @@ class IMAPDriver implements MailDriverInterface
     {
         $mailbox = Connection::getInstance($this->config)->connect()->getMailbox($name);
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
 
         return $mailbox;
     }
@@ -100,6 +100,7 @@ class IMAPDriver implements MailDriverInterface
     public function deleteMailbox($mailbox)
     {
         Connection::getInstance($this->config)->connect()->deleteMailbox($mailbox);
+        Connection::getInstance($this->config)->close();
     }
 
     /**
@@ -112,7 +113,7 @@ class IMAPDriver implements MailDriverInterface
     {
         $messages = $mailbox->getMessages($search);
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
 
         return $messages;
     }
@@ -127,7 +128,7 @@ class IMAPDriver implements MailDriverInterface
     {
         $message = $mailbox->getMessage($key);
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
 
         return $message;
     }
@@ -141,7 +142,7 @@ class IMAPDriver implements MailDriverInterface
         $mailbox = Connection::getInstance($this->config)->connect()->getMailbox('Sent');
         $mailbox->addMessage($message, '\\Seen');
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
     }
 
     /**
@@ -159,7 +160,7 @@ class IMAPDriver implements MailDriverInterface
             $mailbox->addMessage($message, '\\Seen');
         }
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
     }
 
     /**
@@ -204,7 +205,7 @@ class IMAPDriver implements MailDriverInterface
     public function moveMessage(MailboxInterface $mailbox, Message $message)
     {
         $message->move($mailbox);
-        $this->resetConnection();
+        Connection::getInstance($this->config)->close();
     }
 
     /**
@@ -231,7 +232,7 @@ class IMAPDriver implements MailDriverInterface
             $message->delete();
         }
 
-        $this->resetConnection();
+        Connection::getInstance($this->config)->expunge();
     }
 
     /**
@@ -240,14 +241,6 @@ class IMAPDriver implements MailDriverInterface
     public function deleteMessage(Message $message)
     {
         $message->delete();
-        $this->resetConnection();
-    }
-
-    /**
-     * void
-     */
-    public function resetConnection()
-    {
-        Connection::getInstance($this->config)->connect()->expunge();
+        Connection::getInstance($this->config)->expunge();
     }
 }

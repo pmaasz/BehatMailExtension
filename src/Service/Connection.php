@@ -25,6 +25,11 @@ class Connection
     private $connection;
 
     /**
+     * @var bool
+     */
+    private $connected;
+
+    /**
      * @var array
      */
     private $config;
@@ -34,12 +39,30 @@ class Connection
      */
     public function connect()
     {
-        if($this->connection->ping())
+        if(!$this->connected)
         {
             $config = $this->config;
 
             return $this->server->authenticate($config['username'], $config['password']);
         }
+
+        return $this->connection;
+    }
+
+    /**
+     * void
+     */
+    public function expunge()
+    {
+        $this->connection->expunge();
+    }
+
+    /**
+     * void
+     */
+    public function close()
+    {
+        $this->connection->close();
     }
 
     /**
@@ -49,6 +72,9 @@ class Connection
     {
         $this->config = $config;
     }
+
+    /**
+
     /**
      * Connection constructor.
      *
@@ -59,6 +85,7 @@ class Connection
         $this->config = $config;
 
         $this->server = new Server($config['server'], $config['port'], $config['flags']);
-        $this->connection = $this->server->authenticate($config['username'], $config['password']);
+        $this->connection = $this->connect();
+        $this->connected = $this->connection->ping();
     }
 }

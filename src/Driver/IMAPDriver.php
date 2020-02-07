@@ -110,9 +110,8 @@ class IMAPDriver implements MailDriverInterface
      */
     public function sendMessage(Message $message)
     {
-        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox('Sent');
-
         /** @var MailboxInterface $mailbox */
+        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox('Sent');
         $mailbox->addMessage($message, '\\Seen');
     }
 
@@ -169,15 +168,12 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
-     * @param string $mailboxName
+     * @param MailboxInterface $mailbox
      * @param Message $message
      */
-    public function moveMessage($mailboxName, Message $message)
+    public function moveMessage(MailboxInterface $mailbox, Message $message)
     {
-        $mailbox = Connection::getInstance()->connect($this->config)->getMailbox($mailboxName);
-
         $message->move($mailbox);
-
         $this->resetConnection();
     }
 
@@ -214,7 +210,6 @@ class IMAPDriver implements MailDriverInterface
     public function deleteMessage(Message $message)
     {
         $message->delete();
-
         $this->resetConnection();
     }
 

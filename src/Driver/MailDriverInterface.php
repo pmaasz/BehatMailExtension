@@ -94,10 +94,10 @@ interface MailDriverInterface
     public function sendMessages(MessageIteratorInterface $messages);
 
     /**
-     * @param string $mailboxName
+     * @param MailboxInterface $mailbox
      * @param Message $message
      */
-    public function moveMessage($mailboxName, Message $message);
+    public function moveMessage(MailboxInterface $mailbox, Message $message);
 
     /**
      * @param Message $message

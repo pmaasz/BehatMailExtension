@@ -36,12 +36,15 @@ class Connection
      */
     public function connect(array $config)
     {
-        if($this->connection->ping() != false)
+        if($this->connection->ping())
         {
             return $this->server->authenticate($config['username'], $config['password']);
         }
     }
 
+    /**
+     * @param array $config
+     */
     public function setConfig(array $config)
     {
         $this->config = $config;

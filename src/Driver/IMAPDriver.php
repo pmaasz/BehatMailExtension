@@ -38,11 +38,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMailboxes()
     {
-        $mailboxes = Connection::getInstance($this->config)->connect()->getMailboxes();
-
-        Connection::getInstance($this->config)->close();
-
-        return $mailboxes;
+        return Connection::getInstance($this->config)->connect($this->config)->getMailboxes();
     }
 
     /**
@@ -69,11 +65,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMailbox($name)
     {
-        $mailbox = Connection::getInstance($this->config)->connect()->getMailbox($name);
-
-        Connection::getInstance($this->config)->close();
-
-        return $mailbox;
+        return Connection::getInstance($this->config)->connect($this->config)->getMailbox($name);
     }
 
     /**
@@ -99,8 +91,7 @@ class IMAPDriver implements MailDriverInterface
      */
     public function deleteMailbox($mailbox)
     {
-        Connection::getInstance($this->config)->connect()->deleteMailbox($mailbox);
-        Connection::getInstance($this->config)->close();
+        Connection::getInstance($this->config)->connect($this->config)->deleteMailbox($mailbox);
     }
 
     /**
@@ -111,26 +102,18 @@ class IMAPDriver implements MailDriverInterface
      */
     public function getMessages(MailboxInterface $mailbox, ConditionInterface $search = null)
     {
-        $messages = $mailbox->getMessages($search);
-
-        Connection::getInstance($this->config)->close();
-
-        return $messages;
+        return $mailbox->getMessages($search);
     }
 
     /**
      * @param MailboxInterface $mailbox
      * @param int $key
      *
-     * @return Message $message
+     * @return \Ddeboer\Imap\MessageInterface
      */
     public function getMessage(MailboxInterface $mailbox, $key)
     {
-        $message = $mailbox->getMessage($key);
-
-        Connection::getInstance($this->config)->close();
-
-        return $message;
+        return $mailbox->getMessage($key);
     }
 
     /**
@@ -139,10 +122,8 @@ class IMAPDriver implements MailDriverInterface
     public function sendMessage(Message $message)
     {
         /** @var MailboxInterface $mailbox */
-        $mailbox = Connection::getInstance($this->config)->connect()->getMailbox('Sent');
+        $mailbox = Connection::getInstance($this->config)->connect($this->config)->getMailbox('Sent');
         $mailbox->addMessage($message, '\\Seen');
-
-        Connection::getInstance($this->config)->close();
     }
 
     /**
@@ -153,14 +134,12 @@ class IMAPDriver implements MailDriverInterface
     public function sendMessages(MessageIteratorInterface $messages)
     {
         /** @var MailboxInterface $mailbox */
-        $mailbox = Connection::getInstance($this->config)->connect()->getMailbox('Sent');
+        $mailbox = Connection::getInstance($this->config)->connect($this->config)->getMailbox('Sent');
 
         foreach($messages as $message)
         {
             $mailbox->addMessage($message, '\\Seen');
         }
-
-        Connection::getInstance($this->config)->close();
     }
 
     /**
@@ -205,7 +184,6 @@ class IMAPDriver implements MailDriverInterface
     public function moveMessage(MailboxInterface $mailbox, Message $message)
     {
         $message->move($mailbox);
-        Connection::getInstance($this->config)->close();
     }
 
     /**

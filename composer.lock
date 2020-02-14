@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ff693c2e07e0148953441d07861f9ac7",
+    "content-hash": "da5ff095669e5a8f7f8d2475b653b963",
     "packages": [
         {
             "name": "behat/behat",
@@ -227,12 +227,12 @@
             "version": "1.9.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pmaasz/imap.git",
+                "url": "https://github.com/PHP-Experts/imap.git",
                 "reference": "76490c91fcfa9d273f6f9fe9f3149ad93e8666b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmaasz/imap/zipball/76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
+                "url": "https://api.github.com/repos/PHP-Experts/imap/zipball/76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
                 "reference": "76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
                 "shasum": ""
             },

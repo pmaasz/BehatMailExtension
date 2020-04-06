@@ -22,24 +22,58 @@ class Connection
     /**
      * @var ConnectionInterface
      */
-    private $connection;
+    public $connection;
 
     /**
-     * @param array  $config
+     * @var bool
+     */
+    private $connected;
+
+    /**
+     * @param array $config
      *
      * @return ConnectionInterface
      */
-    private function connect(array $config)
+    public function connect(array $config)
     {
-        $this->server = new Server($config['server'], $config['port'], $config['flags']);
+        if(!$this->connected)
+        {
+            $connection = $this->server->authenticate($config['username'], $config['password']);
 
-        return $this->server->authenticate($config['username'], $config['password']);
+            $this->connection = $connection;
+            $this->connected = $connection->ping();
+
+            return $connection;
+        }
+
+        return $this->connection;
     }
 
     /**
-     * Database constructor.
+     * void
      */
-    protected function __construct()
+    public function expunge()
     {
+        $this->connection->expunge();
+    }
+
+    /**
+     * void
+     */
+    public function close()
+    {
+        $this->connection->close();
+    }
+
+    /**
+
+    /**
+     * Connection constructor.
+     *
+     * @param array $config
+     */
+    protected function __construct(array $config)
+    {
+        $this->server = new Server($config['server'], $config['port'], $config['flags']);
     }
 }

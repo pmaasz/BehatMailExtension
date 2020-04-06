@@ -9,6 +9,7 @@ use Behat\Testwork\ServiceContainer\ExtensionManager;
 use BehatMailExtension\Driver\IMAPDriver;
 use BehatMailExtension\Driver\MailDriverInterface;
 
+use BehatMailExtension\Service\Connection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -97,8 +98,6 @@ class MailExtension implements Extension
                 $driver = new IMAPDriver($config);
                 break;
             case 'pop3':
-                $driver = null;
-                break;
             case 'smtp':
                 $driver = null;
                 break;

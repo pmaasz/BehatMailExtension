@@ -59,6 +59,16 @@ interface MailDriverInterface
     public function getMessages(MailboxInterface $mailbox, ConditionInterface $search);
 
     /**
+     * Get all messages
+     *
+     * @param MailboxInterface $mailbox
+     * @param int $key
+     *
+     * @return Message
+     */
+    public function getMessage(MailboxInterface $mailbox, $key);
+
+    /**
      * Searches in a given mailbox through all messages
      *
      * @param MailboxInterface $mailbox
@@ -94,10 +104,10 @@ interface MailDriverInterface
     public function sendMessages(MessageIteratorInterface $messages);
 
     /**
-     * @param string $mailboxName
+     * @param MailboxInterface $mailbox
      * @param Message $message
      */
-    public function moveMessage($mailboxName, Message $message);
+    public function moveMessage(MailboxInterface $mailbox, Message $message);
 
     /**
      * @param Message $message

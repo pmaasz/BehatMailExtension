@@ -13,8 +13,9 @@ trait Singleton
 
     /**
      * Singleton constructor.
+     * @param array $params
      */
-    protected function __construct()
+    protected function __construct(array $params)
     {
     }
 
@@ -26,13 +27,15 @@ trait Singleton
     }
 
     /**
+     * @param array $params
+     *
      * @return mixed
      */
-    public static function getInstance()
+    public static function getInstance(array $params)
     {
         if( ! self::$instance )
         {
-            self::$instance = new self();
+            self::$instance = new self($params);
         }
 
         return self::$instance;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "da5ff095669e5a8f7f8d2475b653b963",
+    "content-hash": "31eae4d289ef5a6fe95b1b261604649f",
     "packages": [
         {
             "name": "behat/behat",
@@ -223,73 +223,6 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
-            "name": "ddeboer/imap",
-            "version": "1.9.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHP-Experts/imap.git",
-                "reference": "76490c91fcfa9d273f6f9fe9f3149ad93e8666b9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHP-Experts/imap/zipball/76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
-                "reference": "76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-iconv": "*",
-                "ext-imap": "*",
-                "ext-mbstring": "*",
-                "php": "^7.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.14",
-                "phpstan/phpstan": "*",
-                "phpstan/phpstan-phpunit": "*",
-                "phpstan/phpstan-strict-rules": "*",
-                "phpunit/phpunit": "*",
-                "zendframework/zend-mail": "^2.10"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Ddeboer\\Imap\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Ddeboer\\Imap\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David de Boer",
-                    "email": "david@ddeboer.nl"
-                },
-                {
-                    "name": "Filippo Tessarotto",
-                    "email": "zoeslam@gmail.com"
-                },
-                {
-                    "name": "Community contributors",
-                    "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
-                }
-            ],
-            "description": "Object-oriented IMAP for PHP",
-            "keywords": [
-                "email",
-                "imap",
-                "mail"
-            ],
-            "support": {
-                "source": "https://github.com/pmaasz/imap/tree/1.9.3"
-            },
-            "time": "2019-08-07T12:43:24+00:00"
-        },
-        {
             "name": "guzzlehttp/guzzle",
             "version": "6.5.2",
             "source": {
@@ -409,16 +342,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.6.1",
+            "version": "1.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
-                "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/337e3ad8e5716c15f9657bd214d16cc5e69df268",
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268",
                 "shasum": ""
             },
             "require": {
@@ -431,24 +364,24 @@
             },
             "require-dev": {
                 "ext-zlib": "*",
-                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
+                "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.14 || ^7.5.20 || ^8.5.8 || ^9.3.10"
             },
             "suggest": {
-                "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
+                "laminas/laminas-httphandlerrunner": "Emit PSR-7 responses"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -456,12 +389,33 @@
             ],
             "authors": [
                 {
+                    "name": "Graham Campbell",
+                    "email": "hello@gjcampbell.co.uk",
+                    "homepage": "https://github.com/GrahamCampbell"
+                },
+                {
                     "name": "Michael Dowling",
                     "email": "mtdowling@gmail.com",
                     "homepage": "https://github.com/mtdowling"
                 },
                 {
+                    "name": "George Mponos",
+                    "email": "gmponos@gmail.com",
+                    "homepage": "https://github.com/gmponos"
+                },
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com",
+                    "homepage": "https://github.com/Nyholm"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://github.com/sagikazarmark"
+                },
+                {
                     "name": "Tobias Schultze",
+                    "email": "webmaster@tubo-world.de",
                     "homepage": "https://github.com/Tobion"
                 }
             ],
@@ -476,7 +430,88 @@
                 "uri",
                 "url"
             ],
-            "time": "2019-07-01T23:21:34+00:00"
+            "support": {
+                "issues": "https://github.com/guzzle/psr7/issues",
+                "source": "https://github.com/guzzle/psr7/tree/1.8.5"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/GrahamCampbell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/Nyholm",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/guzzlehttp/psr7",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-03-20T21:51:18+00:00"
+        },
+        {
+            "name": "php-experts/imap",
+            "version": "1.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-Experts/imap.git",
+                "reference": "76490c91fcfa9d273f6f9fe9f3149ad93e8666b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-Experts/imap/zipball/76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
+                "reference": "76490c91fcfa9d273f6f9fe9f3149ad93e8666b9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "ext-imap": "*",
+                "ext-mbstring": "*",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "phpstan/phpstan": "*",
+                "phpstan/phpstan-phpunit": "*",
+                "phpstan/phpstan-strict-rules": "*",
+                "phpunit/phpunit": "*",
+                "zendframework/zend-mail": "^2.10"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ddeboer\\Imap\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David de Boer",
+                    "email": "david@ddeboer.nl"
+                },
+                {
+                    "name": "Filippo Tessarotto",
+                    "email": "zoeslam@gmail.com"
+                },
+                {
+                    "name": "Community contributors",
+                    "homepage": "https://github.com/ddeboer/imap/graphs/contributors"
+                }
+            ],
+            "description": "Object-oriented IMAP for PHP",
+            "keywords": [
+                "email",
+                "imap",
+                "mail"
+            ],
+            "support": {
+                "source": "https://github.com/PHP-Experts/imap/tree/1.9.3"
+            },
+            "time": "2019-08-07T12:43:24+00:00"
         },
         {
             "name": "psr/container",
@@ -575,6 +610,9 @@
                 "request",
                 "response"
             ],
+            "support": {
+                "source": "https://github.com/php-fig/http-message/tree/master"
+            },
             "time": "2016-08-06T14:39:51+00:00"
         },
         {
@@ -662,6 +700,10 @@
                 }
             ],
             "description": "A polyfill for getallheaders.",
+            "support": {
+                "issues": "https://github.com/ralouphie/getallheaders/issues",
+                "source": "https://github.com/ralouphie/getallheaders/tree/develop"
+            },
             "time": "2019-03-08T08:55:37+00:00"
         },
         {
@@ -3040,5 +3082,6 @@
         "ext-json": "*",
         "ext-imap": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }

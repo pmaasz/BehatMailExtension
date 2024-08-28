@@ -154,7 +154,7 @@ class IMAPDriver implements MailDriverInterface
     /**
      * @param string           $headerName
      *
-     * @return MessageIteratorInterface|mixed
+     * @return MessageIteratorInterface
      */
     public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
     {

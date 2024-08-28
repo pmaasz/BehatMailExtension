@@ -147,3 +147,7 @@ The mail driver will return a message object with the following API:
     <li>clearFlag()</li>
     <li>getAttachements()</li>
 </ul>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=pmaasz/behatmailextension&type=Date)](https://star-history.com/#pmaasz/behatmailextension&Date)

@@ -149,5 +149,10 @@ The mail driver will return a message object with the following API:
 </ul>
 
 ## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=pmaasz/behatmailextension&type=Date)](https://star-history.com/#pmaasz/behatmailextension&Date)
+<a href="https://star-history.com/#pmaasz/behatmailextension&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=pmaasz/behatmailextension&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=pmaasz/behatmailextension&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=pmaasz/behatmailextension&type=Date" />
+ </picture>
+</a>

@@ -30,14 +30,11 @@ class Connection
     private $connected;
 
     /**
-     * @param array $config
-     *
      * @return ConnectionInterface
      */
     public function connect(array $config)
     {
-        if(!$this->connected)
-        {
+        if(!$this->connected) {
             $connection = $this->server->authenticate($config['username'], $config['password']);
 
             $this->connection = $connection;
@@ -57,21 +54,11 @@ class Connection
         $this->connection->expunge();
     }
 
-    /**
-     * void
-     */
     public function close()
     {
         $this->connection->close();
     }
 
-    /**
-
-    /**
-     * Connection constructor.
-     *
-     * @param array $config
-     */
     protected function __construct(array $config)
     {
         $this->server = new Server($config['server'], $config['port'], $config['flags']);

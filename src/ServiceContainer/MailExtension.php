@@ -6,6 +6,7 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 
+use BehatMailExtension\Context\MailAwareInitializer;
 use BehatMailExtension\Driver\IMAPDriver;
 use BehatMailExtension\Driver\MailDriverInterface;
 
@@ -25,8 +26,6 @@ class MailExtension implements Extension
     /**
      * You can modify the container here before it is dumped to PHP code.
      *
-     * @param ContainerBuilder $container
-     *
      * @api
      */
     public function process(ContainerBuilder $container)
@@ -34,8 +33,6 @@ class MailExtension implements Extension
     }
 
     /**
-     * Returns the extension config key.
-     *
      * @return string
      */
     public function getConfigKey()
@@ -59,8 +56,6 @@ class MailExtension implements Extension
 
     /**
      * Setups configuration for the extension.
-     *
-     * @param ArrayNodeDefinition $builder
      */
     public function configure(ArrayNodeDefinition $builder)
     {
@@ -85,9 +80,6 @@ class MailExtension implements Extension
 
     /**
      * Loads extension services into temporary container.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $config
      */
     public function load(ContainerBuilder $container, array $config)
     {
@@ -103,19 +95,14 @@ class MailExtension implements Extension
                 break;
         }
 
-        if($driver)
-        {
+        if($driver) {
             $this->loadInitializer($container, $driver);
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param MailDriverInterface $driver
-     */
     private function loadInitializer(ContainerBuilder $container, MailDriverInterface $driver)
     {
-        $definition = new Definition('BehatMailExtension\Context\MailAwareInitializer', [$driver]);
+        $definition = new Definition(MailAwareInitializer::class, [$driver]);
         $definition->addTag(ContextExtension::INITIALIZER_TAG, ['priority' => 0]);
 
         $container->setDefinition('mail.initializer', $definition);

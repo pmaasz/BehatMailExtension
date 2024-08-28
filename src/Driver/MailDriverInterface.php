@@ -69,7 +69,7 @@ interface MailDriverInterface
     public function getMessage(MailboxInterface $mailbox, $key);
 
     /**
-     * Searches in a given mailbox through all messages
+     * TODO Searches in a given mailbox through all messages
      *
      * @param MailboxInterface $mailbox
      * @param array $searchparams

@@ -20,11 +20,6 @@ class MailAwareInitializer implements ContextInitializer
      */
     private $mail;
 
-    /**
-     * Construct the initializer.
-     *
-     * @param MailDriverInterface $mail
-     */
     public function __construct(MailDriverInterface $mail)
     {
         $this->mail = $mail;

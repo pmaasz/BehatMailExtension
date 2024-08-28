@@ -9,7 +9,7 @@
     }
   ],
   "require": {
-    "php" : ">=5.3.3",
+    "php" : ">=7.0",
     "guzzlehttp/guzzle": "^6.2",
     "behat/behat": "^3.0",
     "php-experts/imap": "^1.9",

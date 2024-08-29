@@ -5,16 +5,12 @@ namespace BehatMailExtension\ServiceContainer;
 use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
-
 use BehatMailExtension\Context\MailAwareInitializer;
 use BehatMailExtension\Driver\IMAPDriver;
 use BehatMailExtension\Driver\MailDriverInterface;
-
-use BehatMailExtension\Service\Connection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-
 
 /**
  * Class MailExtension

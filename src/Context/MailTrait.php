@@ -18,8 +18,6 @@ trait MailTrait
 
     /**
      * Mail property will be set by the initializer
-     *
-     * @param MailDriverInterface $mail
      */
     public function setMail(MailDriverInterface $mail)
     {

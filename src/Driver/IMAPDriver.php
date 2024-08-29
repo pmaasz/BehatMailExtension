@@ -4,6 +4,7 @@ namespace BehatMailExtension\Driver;
 
 use BehatMailExtension\Service\Connection;
 use Ddeboer\Imap\MailboxInterface;
+use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
 use Ddeboer\Imap\Search\Header\Header;
@@ -23,11 +24,6 @@ class IMAPDriver implements MailDriverInterface
      */
     private $config;
 
-    /**
-     * IMAPDriver constructor.
-     *
-     * @param array $config
-     */
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -59,8 +55,6 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
-     * @param string $name
-     *
      * @return MailboxInterface
      */
     public function getMailbox($name)
@@ -106,19 +100,15 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
-     * @param MailboxInterface $mailbox
      * @param int $key
      *
-     * @return \Ddeboer\Imap\MessageInterface
+     * @return MessageInterface
      */
     public function getMessage(MailboxInterface $mailbox, $key)
     {
         return $mailbox->getMessage($key);
     }
 
-    /**
-     * @param Message $message
-     */
     public function sendMessage(Message $message)
     {
         /** @var MailboxInterface $mailbox */
@@ -127,8 +117,6 @@ class IMAPDriver implements MailDriverInterface
     }
 
     /**
-     * @param MessageIteratorInterface $messages
-     *
      * @return void
      */
     public function sendMessages(MessageIteratorInterface $messages)
@@ -164,10 +152,9 @@ class IMAPDriver implements MailDriverInterface
     }*/
 
     /**
-     * @param MailboxInterface $mailbox
      * @param string           $headerName
      *
-     * @return MessageIteratorInterface|mixed
+     * @return MessageIteratorInterface
      */
     public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
     {
@@ -177,45 +164,30 @@ class IMAPDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param Message $message
-     */
     public function moveMessage(MailboxInterface $mailbox, Message $message)
     {
         $message->move($mailbox);
     }
 
     /**
-     * @param Message $message
      * @param string $downloadDir
      */
     public function downloadMessageAttachments(Message $message, $downloadDir)
     {
-        $attachments = $message->getAttachments();
-
-        foreach($attachments as $attachment)
-        {
+        foreach($message->getAttachments() as $attachment) {
             file_put_contents($downloadDir . $attachment->getFilename(), $attachment->getDecodedContent());
         }
     }
 
-    /**
-     * @param MessageIteratorInterface $messages
-     */
     public function deleteMessages(MessageIteratorInterface $messages)
     {
-        foreach($messages as $message)
-        {
+        foreach($messages as $message) {
             $message->delete();
         }
 
         Connection::getInstance($this->config)->expunge();
     }
 
-    /**
-     * @param Message $message
-     */
     public function deleteMessage(Message $message)
     {
         $message->delete();

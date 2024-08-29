@@ -7,7 +7,7 @@ use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
-use Ddeboer\Imap\Search\Header\Header;
+use BehatMailExtension\Imap\Search\Header;
 use Ddeboer\Imap\SearchExpression;
 use Ddeboer\Imap\Message;
 use const LATT_NOSELECT;

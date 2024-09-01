@@ -1,23 +1,24 @@
 <?php
 
-namespace BehatMailExtension\Driver;
+namespace BehatMailExtension\Imap\Driver;
 
+use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Imap\Search\Header;
 use BehatMailExtension\Service\Connection;
 use Ddeboer\Imap\MailboxInterface;
+use Ddeboer\Imap\Message;
 use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
-use BehatMailExtension\Imap\Search\Header;
 use Ddeboer\Imap\SearchExpression;
-use Ddeboer\Imap\Message;
 use const LATT_NOSELECT;
 
 /**
- * Class IMAPDriver
+ * Class ImapDriver
  *
  * @author Philip Maaß <PhilipMaasz@aol.com>
  */
-class IMAPDriver implements MailDriverInterface
+class ImapDriver implements MailDriverInterface
 {
     /**
      * @var array

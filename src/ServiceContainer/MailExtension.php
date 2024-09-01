@@ -6,8 +6,8 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use BehatMailExtension\Context\MailAwareInitializer;
-use BehatMailExtension\Driver\IMAPDriver;
 use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Imap\Driver\ImapDriver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -83,7 +83,7 @@ class MailExtension implements Extension
 
         switch ($config['driver']) {
             case 'imap':
-                $driver = new IMAPDriver($config);
+                $driver = new ImapDriver($config);
                 break;
             case 'pop3':
             case 'smtp':

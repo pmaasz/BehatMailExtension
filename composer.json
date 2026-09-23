@@ -17,7 +17,7 @@
     "ddeboer/imap": "^1.19"
   },
   "require-dev": {
-    "phpspec/phpspec": "^7.0",
+    "phpspec/phpspec": "^8.0",
     "phpunit/phpunit": "^9.6"
   },
   "autoload": {

@@ -6,7 +6,6 @@ use BehatMailExtension\Driver\MailDriverInterface;
 use BehatMailExtension\Imap\Search\Header;
 use BehatMailExtension\Service\Connection;
 use Ddeboer\Imap\MailboxInterface;
-use Ddeboer\Imap\Message;
 use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
@@ -110,11 +109,11 @@ class ImapDriver implements MailDriverInterface
         return $mailbox->getMessage($key);
     }
 
-    public function sendMessage(Message $message)
+    public function sendMessage(MessageInterface $message)
     {
         /** @var MailboxInterface $mailbox */
         $mailbox = Connection::getInstance($this->config)->connect($this->config)->getMailbox('Sent');
-        $mailbox->addMessage($message, '\\Seen');
+        $mailbox->addMessage($message->getRawMessage(), '\\Seen');
     }
 
     /**
@@ -127,7 +126,7 @@ class ImapDriver implements MailDriverInterface
 
         foreach($messages as $message)
         {
-            $mailbox->addMessage($message, '\\Seen');
+            $mailbox->addMessage($message->getRawMessage(), '\\Seen');
         }
     }
 
@@ -165,7 +164,7 @@ class ImapDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
-    public function moveMessage(MailboxInterface $mailbox, Message $message)
+    public function moveMessage(MailboxInterface $mailbox, MessageInterface $message)
     {
         $message->move($mailbox);
     }
@@ -173,10 +172,31 @@ class ImapDriver implements MailDriverInterface
     /**
      * @param string $downloadDir
      */
-    public function downloadMessageAttachments(Message $message, $downloadDir)
+    public function downloadMessageAttachments(MessageInterface $message, $downloadDir)
     {
         foreach($message->getAttachments() as $attachment) {
-            file_put_contents($downloadDir . $attachment->getFilename(), $attachment->getDecodedContent());
+            $filename = $attachment->getFilename();
+
+            if (null === $filename || '' === $filename) {
+                throw new \InvalidArgumentException('Attachment filename must not be empty.');
+            }
+
+            $safeFilename = basename(str_replace('\\', '/', $filename));
+
+            if ($safeFilename !== $filename
+                || $safeFilename === '.'
+                || $safeFilename === '..'
+                || false !== strpos($filename, "\0")
+                || false !== strpos($filename, '..')
+            ) {
+                throw new \InvalidArgumentException(
+                    sprintf('Unsafe attachment filename "%s".', $filename)
+                );
+            }
+
+            $downloadDir = rtrim($downloadDir, '/\\') . DIRECTORY_SEPARATOR;
+
+            file_put_contents($downloadDir . $safeFilename, $attachment->getDecodedContent());
         }
     }
 
@@ -189,7 +209,7 @@ class ImapDriver implements MailDriverInterface
         Connection::getInstance($this->config)->expunge();
     }
 
-    public function deleteMessage(Message $message)
+    public function deleteMessage(MessageInterface $message)
     {
         $message->delete();
         Connection::getInstance($this->config)->expunge();

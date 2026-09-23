@@ -9,7 +9,7 @@
     }
   ],
   "require": {
-    "php" : ">=7.0",
+    "php" : ">=7.3",
     "guzzlehttp/guzzle": "^6.2",
     "behat/behat": "^3.0",
     "ext-json": "*",
@@ -17,8 +17,8 @@
     "ddeboer/imap": "^1.19"
   },
   "require-dev": {
-    "phpspec/phpspec": "^2.1",
-    "phpunit/phpunit": "*"
+    "phpspec/phpspec": "^7.0",
+    "phpunit/phpunit": "^9.6"
   },
   "autoload": {
     "psr-4": {

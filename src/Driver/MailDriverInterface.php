@@ -17,56 +17,24 @@ interface MailDriverInterface
     /**
      * @return MailboxInterface[]
      */
-    public function getMailboxes();
+    public function getMailboxes(): array;
 
-    /**
-     * @param string $name
-     *
-     * @return MailboxInterface
-     */
-    public function getMailbox($name);
+    public function getMailbox(string $name): MailboxInterface;
 
     /**
      * @param MailboxInterface[] $mailboxes
      */
-    public function analyzeMailboxes($mailboxes);
+    public function analyzeMailboxes(array $mailboxes): void;
 
-    /**
-     * @param MailboxInterface $mailbox
-     */
-    public function analyzeMailbox($mailbox);
+    public function analyzeMailbox(MailboxInterface $mailbox): void;
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param string $flag
-     * @param array $numbers
-     */
-    public function setMailboxFlag($mailbox, $flag, $numbers);
+    public function setMailboxFlag(MailboxInterface $mailbox, string $flag, array $numbers): void;
 
-    /**
-     * @param MailboxInterface $mailbox
-     */
-    public function deleteMailbox($mailbox);
+    public function deleteMailbox(MailboxInterface $mailbox): void;
 
-    /**
-     * Get all messages
-     *
-     * @param MailboxInterface $mailbox
-     * @param ConditionInterface $search
-     *
-     * @return MessageIteratorInterface
-     */
-    public function getMessages(MailboxInterface $mailbox, ConditionInterface $search);
+    public function getMessages(MailboxInterface $mailbox, ConditionInterface $search): MessageIteratorInterface;
 
-    /**
-     * Get all messages
-     *
-     * @param MailboxInterface $mailbox
-     * @param int $key
-     *
-     * @return MessageInterface
-     */
-    public function getMessage(MailboxInterface $mailbox, $key);
+    public function getMessage(MailboxInterface $mailbox, int $key): MessageInterface;
 
     /**
      * TODO Searches in a given mailbox through all messages
@@ -79,53 +47,17 @@ interface MailDriverInterface
     // commented for future implementation
     //public function searchMessages(MailboxInterface $mailbox, array $searchparams);
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param string $headerName
-     *
-     * @return mixed
-     */
-    public function searchMessageByHeader(MailboxInterface $mailbox, $headerName);
+    public function searchMessageByHeader(MailboxInterface $mailbox, string $headerName): mixed;
 
-    /**
-     * Sends a message
-     *
-     * @param MessageInterface $message
-     */
     public function sendMessage(MessageInterface $message);
 
-    /**
-     * Sends multiple messages
-     *
-     * @param MessageIteratorInterface $messages
-     *
-     * @return mixed
-     */
-    public function sendMessages(MessageIteratorInterface $messages);
+    public function sendMessages(MessageIteratorInterface $messages): mixed;
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param MessageInterface $message
-     */
     public function moveMessage(MailboxInterface $mailbox, MessageInterface $message);
 
-    /**
-     * @param MessageInterface $message
-     * @param string $downloadDir
-     */
-    public function downloadMessageAttachments(MessageInterface $message, $downloadDir);
+    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir);
 
-    /**
-     * Delete the messages from the inbox
-     *
-     * @param MessageIteratorInterface $messages
-     */
     public function deleteMessages(MessageIteratorInterface $messages);
 
-    /**
-     * Deletes one message
-     *
-     * @param MessageInterface $message
-     */
     public function deleteMessage(MessageInterface $message);
 }

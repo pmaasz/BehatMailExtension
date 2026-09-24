@@ -19,10 +19,7 @@ use const LATT_NOSELECT;
  */
 class ImapDriver implements MailDriverInterface
 {
-    /**
-     * @var array
-     */
-    private $config;
+    private array $config;
 
     public function __construct(array $config)
     {
@@ -32,7 +29,7 @@ class ImapDriver implements MailDriverInterface
     /**
      * @return MailboxInterface[]
      */
-    public function getMailboxes()
+    public function getMailboxes(): array
     {
         return Connection::getInstance($this->config)->connect($this->config)->getMailboxes();
     }
@@ -40,7 +37,7 @@ class ImapDriver implements MailDriverInterface
     /**
      * @param MailboxInterface[] $mailboxes
      */
-    public function analyzeMailboxes($mailboxes)
+    public function analyzeMailboxes(array $mailboxes): void
     {
         foreach ($mailboxes as $mailbox) {
             // Skip container-only mailboxes
@@ -54,72 +51,47 @@ class ImapDriver implements MailDriverInterface
         }
     }
 
-    /**
-     * @return MailboxInterface
-     */
-    public function getMailbox($name)
+    public function getMailbox($name): MailboxInterface
     {
         return Connection::getInstance($this->config)->connect($this->config)->getMailbox($name);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     */
-    public function analyzeMailbox($mailbox)
+    public function analyzeMailbox(MailboxInterface $mailbox): void
     {
         printf('Mailbox "%s" has %s messages', $mailbox->getName(), $mailbox->count());
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param string $flag
-     * @param array $numbers
-     */
-    public function setMailboxFlag($mailbox, $flag, $numbers)
+    public function setMailboxFlag(MailboxInterface $mailbox, string $flag, array $numbers): void
     {
         $mailbox->setFlag($flag, $numbers);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     */
-    public function deleteMailbox($mailbox)
+    public function deleteMailbox(MailboxInterface $mailbox): void
     {
         Connection::getInstance($this->config)->connect($this->config)->deleteMailbox($mailbox);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param ConditionInterface $search
-     *
-     * @return MessageIteratorInterface $message
-     */
-    public function getMessages(MailboxInterface $mailbox, ConditionInterface $search = null)
+    public function getMessages(MailboxInterface $mailbox, ?ConditionInterface $search = null): MessageIteratorInterface
     {
         return $mailbox->getMessages($search);
     }
 
     /**
      * @param int $key
-     *
-     * @return MessageInterface
      */
-    public function getMessage(MailboxInterface $mailbox, $key)
+    public function getMessage(MailboxInterface $mailbox, $key): MessageInterface
     {
         return $mailbox->getMessage($key);
     }
 
-    public function sendMessage(MessageInterface $message)
+    public function sendMessage(MessageInterface $message): void
     {
         /** @var MailboxInterface $mailbox */
         $mailbox = Connection::getInstance($this->config)->connect($this->config)->getMailbox('Sent');
         $mailbox->addMessage($message->getRawMessage(), '\\Seen');
     }
 
-    /**
-     * @return void
-     */
-    public function sendMessages(MessageIteratorInterface $messages)
+    public function sendMessages(MessageIteratorInterface $messages): true
     {
         /** @var MailboxInterface $mailbox */
         $mailbox = Connection::getInstance($this->config)->connect($this->config)->getMailbox('Sent');
@@ -128,6 +100,8 @@ class ImapDriver implements MailDriverInterface
         {
             $mailbox->addMessage($message->getRawMessage(), '\\Seen');
         }
+
+        return true;
     }
 
     /**
@@ -152,11 +126,9 @@ class ImapDriver implements MailDriverInterface
     }*/
 
     /**
-     * @param string           $headerName
-     *
-     * @return MessageIteratorInterface
+     * @param string $headerName
      */
-    public function searchMessageByHeader(MailboxInterface $mailbox, $headerName)
+    public function searchMessageByHeader(MailboxInterface $mailbox, string $headerName): MessageIteratorInterface
     {
         $search = new SearchExpression();
         $search->addCondition(new Header($headerName));
@@ -164,7 +136,7 @@ class ImapDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
-    public function moveMessage(MailboxInterface $mailbox, MessageInterface $message)
+    public function moveMessage(MailboxInterface $mailbox, MessageInterface $message): void
     {
         $message->move($mailbox);
     }
@@ -172,7 +144,7 @@ class ImapDriver implements MailDriverInterface
     /**
      * @param string $downloadDir
      */
-    public function downloadMessageAttachments(MessageInterface $message, $downloadDir)
+    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir): void
     {
         foreach($message->getAttachments() as $attachment) {
             $filename = $attachment->getFilename();
@@ -186,8 +158,8 @@ class ImapDriver implements MailDriverInterface
             if ($safeFilename !== $filename
                 || $safeFilename === '.'
                 || $safeFilename === '..'
-                || false !== strpos($filename, "\0")
-                || false !== strpos($filename, '..')
+                || str_contains($filename, "\0")
+                || str_contains($filename, '..')
             ) {
                 throw new \InvalidArgumentException(
                     sprintf('Unsafe attachment filename "%s".', $filename)
@@ -200,7 +172,7 @@ class ImapDriver implements MailDriverInterface
         }
     }
 
-    public function deleteMessages(MessageIteratorInterface $messages)
+    public function deleteMessages(MessageIteratorInterface $messages): void
     {
         foreach($messages as $message) {
             $message->delete();
@@ -209,7 +181,7 @@ class ImapDriver implements MailDriverInterface
         Connection::getInstance($this->config)->expunge();
     }
 
-    public function deleteMessage(MessageInterface $message)
+    public function deleteMessage(MessageInterface $message): void
     {
         $message->delete();
         Connection::getInstance($this->config)->expunge();

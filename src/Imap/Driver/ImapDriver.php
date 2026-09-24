@@ -37,7 +37,7 @@ class ImapDriver implements MailDriverInterface
     /**
      * @param MailboxInterface[] $mailboxes
      */
-    public function analyzeMailboxes($mailboxes): void
+    public function analyzeMailboxes(array $mailboxes): void
     {
         foreach ($mailboxes as $mailbox) {
             // Skip container-only mailboxes
@@ -56,28 +56,17 @@ class ImapDriver implements MailDriverInterface
         return Connection::getInstance($this->config)->connect($this->config)->getMailbox($name);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     */
-    public function analyzeMailbox($mailbox): void
+    public function analyzeMailbox(MailboxInterface $mailbox): void
     {
         printf('Mailbox "%s" has %s messages', $mailbox->getName(), $mailbox->count());
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     * @param string $flag
-     * @param array $numbers
-     */
-    public function setMailboxFlag($mailbox, $flag, $numbers): void
+    public function setMailboxFlag(MailboxInterface $mailbox, string $flag, array $numbers): void
     {
         $mailbox->setFlag($flag, $numbers);
     }
 
-    /**
-     * @param MailboxInterface $mailbox
-     */
-    public function deleteMailbox($mailbox): void
+    public function deleteMailbox(MailboxInterface $mailbox): void
     {
         Connection::getInstance($this->config)->connect($this->config)->deleteMailbox($mailbox);
     }
@@ -102,7 +91,7 @@ class ImapDriver implements MailDriverInterface
         $mailbox->addMessage($message->getRawMessage(), '\\Seen');
     }
 
-    public function sendMessages(MessageIteratorInterface $messages): void
+    public function sendMessages(MessageIteratorInterface $messages): true
     {
         /** @var MailboxInterface $mailbox */
         $mailbox = Connection::getInstance($this->config)->connect($this->config)->getMailbox('Sent');
@@ -111,6 +100,8 @@ class ImapDriver implements MailDriverInterface
         {
             $mailbox->addMessage($message->getRawMessage(), '\\Seen');
         }
+
+        return true;
     }
 
     /**
@@ -135,9 +126,9 @@ class ImapDriver implements MailDriverInterface
     }*/
 
     /**
-     * @param string           $headerName
+     * @param string $headerName
      */
-    public function searchMessageByHeader(MailboxInterface $mailbox, $headerName): MessageIteratorInterface
+    public function searchMessageByHeader(MailboxInterface $mailbox, string $headerName): MessageIteratorInterface
     {
         $search = new SearchExpression();
         $search->addCondition(new Header($headerName));
@@ -153,7 +144,7 @@ class ImapDriver implements MailDriverInterface
     /**
      * @param string $downloadDir
      */
-    public function downloadMessageAttachments(MessageInterface $message, $downloadDir): void
+    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir): void
     {
         foreach($message->getAttachments() as $attachment) {
             $filename = $attachment->getFilename();

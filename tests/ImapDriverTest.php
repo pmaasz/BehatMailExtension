@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class ImapDriverTest extends TestCase
 {
-    private function driver()
+    private function driver(): ImapDriver
     {
         return new ImapDriver([
             'driver' => 'imap',
@@ -23,7 +23,7 @@ class ImapDriverTest extends TestCase
         ]);
     }
 
-    public function testGetMessagesDelegatesToMailbox()
+    public function testGetMessagesDelegatesToMailbox(): void
     {
         $driver = $this->driver();
 
@@ -37,7 +37,7 @@ class ImapDriverTest extends TestCase
         $this->assertSame($iterator, $driver->getMessages($mailbox));
     }
 
-    public function testGetMessageDelegatesToMailbox()
+    public function testGetMessageDelegatesToMailbox(): void
     {
         $driver = $this->driver();
 
@@ -51,7 +51,7 @@ class ImapDriverTest extends TestCase
         $this->assertSame($message, $driver->getMessage($mailbox, 42));
     }
 
-    public function testSetMailboxFlagDelegatesToMailbox()
+    public function testSetMailboxFlagDelegatesToMailbox(): void
     {
         $driver = $this->driver();
 
@@ -64,7 +64,7 @@ class ImapDriverTest extends TestCase
         $driver->setMailboxFlag($mailbox, '\\Seen', [1, 2, 3]);
     }
 
-    public function testSearchMessageByHeaderPassesHeaderCondition()
+    public function testSearchMessageByHeaderPassesHeaderCondition(): void
     {
         $driver = $this->driver();
 
@@ -88,7 +88,7 @@ class ImapDriverTest extends TestCase
         $this->assertSame($iterator, $result);
     }
 
-    public function testMoveMessageDelegatesToMessage()
+    public function testMoveMessageDelegatesToMessage(): void
     {
         $driver = $this->driver();
 
@@ -101,11 +101,11 @@ class ImapDriverTest extends TestCase
         $driver->moveMessage($mailbox, $message);
     }
 
-    public function testDownloadMessageAttachmentsWritesFiles()
+    public function testDownloadMessageAttachmentsWritesFiles(): void
     {
         $driver = $this->driver();
 
-        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid();
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
         mkdir($downloadDir, 0777, true);
 
         try {
@@ -126,11 +126,11 @@ class ImapDriverTest extends TestCase
         }
     }
 
-    public function testDownloadMessageAttachmentsNormalizesTrailingSlash()
+    public function testDownloadMessageAttachmentsNormalizesTrailingSlash(): void
     {
         $driver = $this->driver();
 
-        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid();
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
         mkdir($downloadDir, 0777, true);
 
         try {
@@ -152,11 +152,11 @@ class ImapDriverTest extends TestCase
     /**
      * @dataProvider unsafeFilenameProvider
      */
-    public function testDownloadMessageAttachmentsRejectsTraversal($filename)
+    public function testDownloadMessageAttachmentsRejectsTraversal($filename): void
     {
         $driver = $this->driver();
 
-        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid();
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
         mkdir($downloadDir, 0777, true);
 
         try {
@@ -174,7 +174,7 @@ class ImapDriverTest extends TestCase
         }
     }
 
-    public function unsafeFilenameProvider()
+    public function unsafeFilenameProvider(): array
     {
         return [
             'dotdot slash' => ['../evil.txt'],
@@ -188,11 +188,11 @@ class ImapDriverTest extends TestCase
         ];
     }
 
-    public function testDownloadMessageAttachmentsRejectsNullFilename()
+    public function testDownloadMessageAttachmentsRejectsNullFilename(): void
     {
         $driver = $this->driver();
 
-        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid();
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
         mkdir($downloadDir, 0777, true);
 
         try {
@@ -210,11 +210,11 @@ class ImapDriverTest extends TestCase
         }
     }
 
-    public function testDownloadMessageAttachmentsDoesNotWriteOutsideOnTraversal()
+    public function testDownloadMessageAttachmentsDoesNotWriteOutsideOnTraversal(): void
     {
         $driver = $this->driver();
 
-        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_base_' . uniqid();
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_base_' . uniqid('', true);
         $downloadDir = $base . DIRECTORY_SEPARATOR . 'inbox';
         mkdir($downloadDir, 0777, true);
 
@@ -245,16 +245,18 @@ class ImapDriverTest extends TestCase
         }
     }
 
-    private function removeDir($dir)
+    private function removeDir($dir): void
     {
         if (!is_dir($dir)) {
             return;
         }
+
         $files = scandir($dir);
         foreach ($files as $file) {
             if ($file === '.' || $file === '..') {
                 continue;
             }
+
             $path = $dir . DIRECTORY_SEPARATOR . $file;
             if (is_dir($path)) {
                 $this->removeDir($path);
@@ -262,6 +264,7 @@ class ImapDriverTest extends TestCase
                 @unlink($path);
             }
         }
+
         @rmdir($dir);
     }
 }

@@ -10,24 +10,22 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class MailExtensionTest extends TestCase
 {
-    private function processConfig(array $config)
+    private function processConfig(array $config): array
     {
         $extension = new MailExtension();
         $builder = new ArrayNodeDefinition('MailExtension');
         $extension->configure($builder);
 
-        $processor = new Processor();
-
-        return $processor->process($builder->getNode(), [$config]);
+        return (new Processor())->process($builder->getNode(), [$config]);
     }
 
-    public function testGetConfigKey()
+    public function testGetConfigKey(): void
     {
         $extension = new MailExtension();
         $this->assertSame('MailExtension', $extension->getConfigKey());
     }
 
-    public function testConfigureRequiresUsername()
+    public function testConfigureRequiresUsername(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -40,7 +38,7 @@ class MailExtensionTest extends TestCase
         ]);
     }
 
-    public function testConfigureRequiresPassword()
+    public function testConfigureRequiresPassword(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -53,7 +51,7 @@ class MailExtensionTest extends TestCase
         ]);
     }
 
-    public function testConfigureRejectsEmptyUsername()
+    public function testConfigureRejectsEmptyUsername(): void
     {
         $this->expectException(InvalidConfigurationException::class);
 
@@ -67,7 +65,7 @@ class MailExtensionTest extends TestCase
         ]);
     }
 
-    public function testConfigureAcceptsValidConfigWithDefaults()
+    public function testConfigureAcceptsValidConfigWithDefaults(): void
     {
         $config = $this->processConfig([
             'username' => 'user',
@@ -82,7 +80,7 @@ class MailExtensionTest extends TestCase
         $this->assertSame('secret', $config['password']);
     }
 
-    public function testLoadWithImapRegistersInitializer()
+    public function testLoadWithImapRegistersInitializer(): void
     {
         $extension = new MailExtension();
         $container = new ContainerBuilder();
@@ -105,7 +103,7 @@ class MailExtensionTest extends TestCase
     /**
      * @dataProvider unsupportedDriverProvider
      */
-    public function testLoadWithUnsupportedDriverThrows($driver)
+    public function testLoadWithUnsupportedDriverThrows($driver): void
     {
         $extension = new MailExtension();
         $container = new ContainerBuilder();
@@ -123,7 +121,7 @@ class MailExtensionTest extends TestCase
         ]);
     }
 
-    public function unsupportedDriverProvider()
+    public function unsupportedDriverProvider(): array
     {
         return [
             'pop3' => ['pop3'],
@@ -132,7 +130,7 @@ class MailExtensionTest extends TestCase
         ];
     }
 
-    public function testLoadWithUnsupportedDriverDoesNotRegisterInitializer()
+    public function testLoadWithUnsupportedDriverDoesNotRegisterInitializer(): void
     {
         $extension = new MailExtension();
         $container = new ContainerBuilder();

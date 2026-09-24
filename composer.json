@@ -10,7 +10,7 @@
   ],
   "require": {
     "php" : ">=8.3",
-    "guzzlehttp/guzzle": "^6.2",
+    "guzzlehttp/guzzle": "^7.15",
     "behat/behat": "^3.0",
     "ext-json": "*",
     "ext-imap": "*",

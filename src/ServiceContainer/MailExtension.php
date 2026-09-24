@@ -6,8 +6,8 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use BehatMailExtension\Context\MailAwareInitializer;
-use BehatMailExtension\Driver\IMAPDriver;
 use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Imap\Driver\ImapDriver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -57,21 +57,27 @@ class MailExtension implements Extension
     {
         $builder
             ->children()
-            ->scalarNode('driver')
-            ->defaultValue('imap')
-            ->end()
-            ->scalarNode('server')
-            ->defaultValue('localhost')
-            ->end()
-            ->scalarNode('port')
-            ->defaultValue(993)
-            ->end()
-            ->scalarNode('flags')
-            ->defaultValue('/imap/ssl/validate-cert')
-            ->end()
-            ->scalarNode('username')
-            ->end()
-            ->scalarNode('password');
+                ->scalarNode('driver')
+                    ->defaultValue('imap')
+                ->end()
+                ->scalarNode('server')
+                    ->defaultValue('localhost')
+                ->end()
+                ->scalarNode('port')
+                    ->defaultValue(993)
+                ->end()
+                ->scalarNode('flags')
+                    ->defaultValue('/imap/ssl/validate-cert')
+                ->end()
+                ->scalarNode('username')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+                ->scalarNode('password')
+                    ->isRequired()
+                    ->cannotBeEmpty()
+                ->end()
+            ->end();
     }
 
     /**
@@ -83,12 +89,15 @@ class MailExtension implements Extension
 
         switch ($config['driver']) {
             case 'imap':
-                $driver = new IMAPDriver($config);
+                $driver = new ImapDriver($config);
                 break;
-            case 'pop3':
-            case 'smtp':
-                $driver = null;
-                break;
+            default:
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        'Unsupported mail driver "%s". Supported drivers are: "imap".',
+                        $config['driver']
+                    )
+                );
         }
 
         if($driver) {

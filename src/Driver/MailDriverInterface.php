@@ -3,7 +3,7 @@
 namespace BehatMailExtension\Driver;
 
 use Ddeboer\Imap\MailboxInterface;
-use Ddeboer\Imap\Message;
+use Ddeboer\Imap\MessageInterface;
 use Ddeboer\Imap\MessageIteratorInterface;
 use Ddeboer\Imap\Search\ConditionInterface;
 
@@ -64,7 +64,7 @@ interface MailDriverInterface
      * @param MailboxInterface $mailbox
      * @param int $key
      *
-     * @return Message
+     * @return MessageInterface
      */
     public function getMessage(MailboxInterface $mailbox, $key);
 
@@ -90,9 +90,9 @@ interface MailDriverInterface
     /**
      * Sends a message
      *
-     * @param Message $message
+     * @param MessageInterface $message
      */
-    public function sendMessage(Message $message);
+    public function sendMessage(MessageInterface $message);
 
     /**
      * Sends multiple messages
@@ -105,15 +105,15 @@ interface MailDriverInterface
 
     /**
      * @param MailboxInterface $mailbox
-     * @param Message $message
+     * @param MessageInterface $message
      */
-    public function moveMessage(MailboxInterface $mailbox, Message $message);
+    public function moveMessage(MailboxInterface $mailbox, MessageInterface $message);
 
     /**
-     * @param Message $message
+     * @param MessageInterface $message
      * @param string $downloadDir
      */
-    public function downloadMessageAttachments(Message $message, $downloadDir);
+    public function downloadMessageAttachments(MessageInterface $message, $downloadDir);
 
     /**
      * Delete the messages from the inbox
@@ -125,7 +125,7 @@ interface MailDriverInterface
     /**
      * Deletes one message
      *
-     * @param Message $message
+     * @param MessageInterface $message
      */
-    public function deleteMessage(Message $message);
+    public function deleteMessage(MessageInterface $message);
 }

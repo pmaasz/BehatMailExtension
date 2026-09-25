@@ -6,11 +6,13 @@ use Behat\Behat\Context\ServiceContainer\ContextExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use BehatMailExtension\Context\MailAwareInitializer;
-use BehatMailExtension\Interface\MailDriverInterface;
 use BehatMailExtension\Imap\Driver\ImapDriver;
+use BehatMailExtension\Service\Connection;
+use Ddeboer\Imap\Server;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Class MailExtension
@@ -85,11 +87,9 @@ class MailExtension implements Extension
      */
     public function load(ContainerBuilder $container, array $config)
     {
-        $driver = null;
-
         switch ($config['driver']) {
             case 'imap':
-                $driver = new ImapDriver($config);
+                $this->loadImap($container, $config);
                 break;
             default:
                 throw new \InvalidArgumentException(
@@ -99,15 +99,39 @@ class MailExtension implements Extension
                     )
                 );
         }
-
-        if($driver) {
-            $this->loadInitializer($container, $driver);
-        }
     }
 
-    private function loadInitializer(ContainerBuilder $container, MailDriverInterface $driver)
+    private function loadImap(ContainerBuilder $container, array $config): void
     {
-        $definition = new Definition(MailAwareInitializer::class, [$driver]);
+        $config = $container->getParameterBag()->escapeValue($config);
+        $server = new Definition(Server::class, [
+            (string) $config['server'],
+            (string) $config['port'],
+            (string) $config['flags'],
+        ]);
+        $server->setShared(true);
+        $container->setDefinition('mail.imap_server', $server);
+
+        $connection = new Definition(Connection::class, [
+            new Reference('mail.imap_server'),
+            (string) $config['server'],
+        ]);
+        $connection->setShared(true);
+        $container->setDefinition('mail.connection', $connection);
+
+        $driver = new Definition(ImapDriver::class, [
+            $config,
+            new Reference('mail.connection'),
+        ]);
+        $driver->setShared(true);
+        $container->setDefinition('mail.driver', $driver);
+
+        $this->loadInitializer($container, 'mail.driver');
+    }
+
+    private function loadInitializer(ContainerBuilder $container, string $driver): void
+    {
+        $definition = new Definition(MailAwareInitializer::class, [new Reference($driver)]);
         $definition->addTag(ContextExtension::INITIALIZER_TAG, ['priority' => 0]);
 
         $container->setDefinition('mail.initializer', $definition);

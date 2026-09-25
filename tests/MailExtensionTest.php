@@ -1,12 +1,16 @@
 <?php
 
 use BehatMailExtension\Context\MailAwareInitializer;
+use BehatMailExtension\Imap\Driver\ImapDriver;
+use BehatMailExtension\Service\Connection;
 use BehatMailExtension\ServiceContainer\MailExtension;
+use Ddeboer\Imap\Server;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class MailExtensionTest extends TestCase
 {
@@ -80,24 +84,67 @@ class MailExtensionTest extends TestCase
         $this->assertSame('secret', $config['password']);
     }
 
-    public function testLoadWithImapRegistersInitializer(): void
+    public function testLoadWithImapRegistersSharedConnectionServices(): void
     {
         $extension = new MailExtension();
         $container = new ContainerBuilder();
-
-        $extension->load($container, [
+        $config = [
             'driver' => 'imap',
             'server' => 'localhost',
             'port' => 993,
             'flags' => '/imap/ssl/validate-cert',
             'username' => 'user',
             'password' => 'secret',
-        ]);
+        ];
 
-        $this->assertTrue($container->hasDefinition('mail.initializer'));
+        $extension->load($container, $config);
 
-        $definition = $container->getDefinition('mail.initializer');
-        $this->assertSame(MailAwareInitializer::class, $definition->getClass());
+        $server = $container->getDefinition('mail.imap_server');
+        $this->assertSame(Server::class, $server->getClass());
+        $this->assertSame([
+            'localhost',
+            '993',
+            '/imap/ssl/validate-cert',
+        ], $server->getArguments());
+
+        $connection = $container->getDefinition('mail.connection');
+        $this->assertSame(Connection::class, $connection->getClass());
+        $this->assertTrue($connection->isShared());
+        $this->assertEquals(new Reference('mail.imap_server'), $connection->getArgument(0));
+        $this->assertSame('localhost', $connection->getArgument(1));
+
+        $driver = $container->getDefinition('mail.driver');
+        $this->assertSame(ImapDriver::class, $driver->getClass());
+        $this->assertSame($config, $driver->getArgument(0));
+        $this->assertEquals(new Reference('mail.connection'), $driver->getArgument(1));
+
+        $initializer = $container->getDefinition('mail.initializer');
+        $this->assertSame(MailAwareInitializer::class, $initializer->getClass());
+        $this->assertEquals(new Reference('mail.driver'), $initializer->getArgument(0));
+    }
+
+    public function testLoadPreservesParameterPlaceholdersInImapConfig(): void
+    {
+        $extension = new MailExtension();
+        $container = new ContainerBuilder();
+        $config = [
+            'driver' => 'imap',
+            'server' => 'localhost',
+            'port' => 993,
+            'flags' => '/imap/ssl/validate-cert',
+            'username' => 'user',
+            'password' => 'pa%ss%word',
+        ];
+
+        $extension->load($container, $config);
+        $container->getDefinition('mail.driver')->setPublic(true);
+        $container->compile();
+
+        $driverConfig = $container->getParameterBag()->unescapeValue(
+            $container->getDefinition('mail.driver')->getArgument(0)
+        );
+
+        $this->assertSame($config, $driverConfig);
     }
 
     /**

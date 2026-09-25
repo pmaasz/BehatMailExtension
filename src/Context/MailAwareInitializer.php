@@ -4,7 +4,7 @@ namespace BehatMailExtension\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
-use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Interface\MailDriverInterface;
 
 /**
  * Class MailAwareInitializer

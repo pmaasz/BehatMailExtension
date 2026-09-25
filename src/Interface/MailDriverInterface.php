@@ -1,6 +1,6 @@
 <?php
 
-namespace BehatMailExtension\Driver;
+namespace BehatMailExtension\Interface;
 
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageInterface;
@@ -47,7 +47,7 @@ interface MailDriverInterface
     // commented for future implementation
     //public function searchMessages(MailboxInterface $mailbox, array $searchparams);
 
-    public function searchMessageByHeader(MailboxInterface $mailbox, string $headerName): mixed;
+    public function searchMessageByHeader(MailboxInterface $mailbox, string $field, string $value): mixed;
 
     public function sendMessage(MessageInterface $message);
 

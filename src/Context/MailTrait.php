@@ -2,7 +2,7 @@
 
 namespace BehatMailExtension\Context;
 
-use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Interface\MailDriverInterface;
 
 /**
  * Trait MailTrait

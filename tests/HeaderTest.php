@@ -7,25 +7,23 @@ class HeaderTest extends TestCase
 {
     public function testToStringFormat(): void
     {
-        $header = new Header('welcome@example.com');
+        $header = new Header('Subject', 'Welcome');
 
-        $this->assertSame('HEADER "welcome@example.com"', $header->toString());
+        $this->assertSame('HEADER Subject "Welcome"', $header->toString());
     }
 
     public function testToStringWithSubject(): void
     {
-        $header = new Header('Welcome!');
+        $header = new Header('Subject', 'Welcome!');
 
-        $this->assertSame('HEADER "Welcome!"', $header->toString());
+        $this->assertSame('HEADER Subject "Welcome!"', $header->toString());
     }
 
     public function testToStringPreservesKeyword(): void
     {
-        $header = new Header('Message-ID <123@example.com>');
+        $header = new Header('Message-ID', '<123@example.com>');
         $result = $header->toString();
 
-        $this->assertStringStartsWith('HEADER "', $result);
-        $this->assertStringEndsWith('"', $result);
-        $this->assertStringContainsString('Message-ID', $result);
+        $this->assertSame('HEADER Message-ID "<123@example.com>"', $result);
     }
 }

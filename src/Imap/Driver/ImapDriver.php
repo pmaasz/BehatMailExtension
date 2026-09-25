@@ -2,7 +2,7 @@
 
 namespace BehatMailExtension\Imap\Driver;
 
-use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Interface\MailDriverInterface;
 use BehatMailExtension\Imap\Search\Header;
 use BehatMailExtension\Service\Connection;
 use Ddeboer\Imap\MailboxInterface;
@@ -76,10 +76,7 @@ class ImapDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }
 
-    /**
-     * @param int $key
-     */
-    public function getMessage(MailboxInterface $mailbox, $key): MessageInterface
+    public function getMessage(MailboxInterface $mailbox, int $key): MessageInterface
     {
         return $mailbox->getMessage($key);
     }
@@ -125,9 +122,6 @@ class ImapDriver implements MailDriverInterface
         return $mailbox->getMessages($search);
     }*/
 
-    /**
-     * @param string $headerName
-     */
     public function searchMessageByHeader(MailboxInterface $mailbox, string $headerName): MessageIteratorInterface
     {
         $search = new SearchExpression();
@@ -141,9 +135,6 @@ class ImapDriver implements MailDriverInterface
         $message->move($mailbox);
     }
 
-    /**
-     * @param string $downloadDir
-     */
     public function downloadMessageAttachments(MessageInterface $message, string $downloadDir): void
     {
         foreach($message->getAttachments() as $attachment) {

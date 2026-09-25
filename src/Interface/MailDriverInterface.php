@@ -1,6 +1,6 @@
 <?php
 
-namespace BehatMailExtension\Driver;
+namespace BehatMailExtension\Interface;
 
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\MessageInterface;

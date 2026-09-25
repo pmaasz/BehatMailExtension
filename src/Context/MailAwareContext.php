@@ -3,7 +3,7 @@
 namespace BehatMailExtension\Context;
 
 use Behat\Behat\Context\Context;
-use BehatMailExtension\Driver\MailDriverInterface;
+use BehatMailExtension\Interface\MailDriverInterface;
 
 /**
  * Class MailAwareContext

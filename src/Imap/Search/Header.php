@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace BehatMailExtension\Imap\Search;
 
-use Ddeboer\Imap\Search\AbstractText;
+use Ddeboer\Imap\Search\ConditionInterface;
 
-final class Header extends AbstractText
+final class Header implements ConditionInterface
 {
-    protected function getKeyword(): string
+    public function __construct(private string $field, private string $value)
     {
-        return 'HEADER';
+    }
+
+    public function toString(): string
+    {
+        return sprintf('HEADER %s "%s"', $this->field, $this->value);
     }
 }

@@ -77,13 +77,12 @@ class ImapDriverTest extends TestCase
                     return false;
                 }
                 $asString = $search->toString();
-                $expected = (new Header('welcome@example.com'))->toString();
-                return strpos($asString, $expected) !== false
-                    || strpos($asString, 'HEADER') !== false;
+                $expected = (new Header('Subject', 'Welcome'))->toString();
+                return $asString === $expected;
             }))
             ->willReturn($iterator);
 
-        $result = $driver->searchMessageByHeader($mailbox, 'welcome@example.com');
+        $result = $driver->searchMessageByHeader($mailbox, 'Subject', 'Welcome');
 
         $this->assertSame($iterator, $result);
     }

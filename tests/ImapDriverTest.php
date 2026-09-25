@@ -2,6 +2,8 @@
 
 use BehatMailExtension\Imap\Driver\ImapDriver;
 use BehatMailExtension\Imap\Search\Header;
+use BehatMailExtension\Interface\ConnectionInterface;
+use Ddeboer\Imap\ConnectionInterface as ImapConnectionInterface;
 use Ddeboer\Imap\MailboxInterface;
 use Ddeboer\Imap\Message\AttachmentInterface;
 use Ddeboer\Imap\MessageInterface;
@@ -11,16 +13,167 @@ use PHPUnit\Framework\TestCase;
 
 class ImapDriverTest extends TestCase
 {
-    private function driver(): ImapDriver
+    private function driver(?ConnectionInterface $connection = null): ImapDriver
     {
-        return new ImapDriver([
+        return new ImapDriver($this->config(), $connection ?? $this->createMock(ConnectionInterface::class));
+    }
+
+    private function messageIterator(array $messages): MessageIteratorInterface
+    {
+        $position = 0;
+        $iterator = $this->createMock(MessageIteratorInterface::class);
+        $iterator->method('rewind')->willReturnCallback(function () use (&$position): void {
+            $position = 0;
+        });
+        $iterator->method('valid')->willReturnCallback(
+            static function () use (&$position, $messages): bool {
+                return isset($messages[$position]);
+            }
+        );
+        $iterator->method('current')->willReturnCallback(
+            static function () use (&$position, $messages): MessageInterface {
+                return $messages[$position];
+            }
+        );
+        $iterator->method('key')->willReturnCallback(
+            static function () use (&$position): int {
+                return $position;
+            }
+        );
+        $iterator->method('next')->willReturnCallback(static function () use (&$position): void {
+            ++$position;
+        });
+
+        return $iterator;
+    }
+
+    private function config(): array
+    {
+        return [
             'driver' => 'imap',
             'server' => 'localhost',
             'port' => 993,
             'flags' => '/imap/ssl/validate-cert',
             'username' => 'user',
             'password' => 'secret',
-        ]);
+        ];
+    }
+
+    public function testGetMailboxesUsesInjectedConnection(): void
+    {
+        $config = $this->config();
+        $mailboxes = [$this->createMock(MailboxInterface::class)];
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->expects($this->once())
+            ->method('getMailboxes')
+            ->willReturn($mailboxes);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->once())
+            ->method('connect')
+            ->with($config)
+            ->willReturn($imapConnection);
+
+        $this->assertSame($mailboxes, (new ImapDriver($config, $connection))->getMailboxes());
+    }
+
+    public function testDeleteMessageUsesInjectedConnection(): void
+    {
+        $message = $this->createMock(MessageInterface::class);
+        $message->expects($this->once())->method('delete');
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->once())->method('expunge');
+
+        $this->driver($connection)->deleteMessage($message);
+    }
+
+    public function testMailboxOperationsUseInjectedConnection(): void
+    {
+        $config = $this->config();
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->expects($this->once())
+            ->method('getMailbox')
+            ->with('Archive')
+            ->willReturn($mailbox);
+        $imapConnection->expects($this->once())->method('deleteMailbox')->with($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->exactly(2))
+            ->method('connect')
+            ->with($config)
+            ->willReturn($imapConnection);
+
+        $driver = new ImapDriver($config, $connection);
+        $this->assertSame($mailbox, $driver->getMailbox('Archive'));
+        $driver->deleteMailbox($mailbox);
+    }
+
+    public function testSendMessageUsesInjectedConnection(): void
+    {
+        $message = $this->createMock(MessageInterface::class);
+        $message->expects($this->once())->method('getRawMessage')->willReturn('raw-message');
+
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->once())
+            ->method('addMessage')
+            ->with('raw-message', '\\Seen')
+            ->willReturn(true);
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->expects($this->once())
+            ->method('getMailbox')
+            ->with('Sent')
+            ->willReturn($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->once())
+            ->method('connect')
+            ->with($this->config())
+            ->willReturn($imapConnection);
+
+        $this->driver($connection)->sendMessage($message);
+    }
+
+    public function testSendMessagesUsesInjectedConnection(): void
+    {
+        $firstMessage = $this->createMock(MessageInterface::class);
+        $firstMessage->method('getRawMessage')->willReturn('first');
+        $secondMessage = $this->createMock(MessageInterface::class);
+        $secondMessage->method('getRawMessage')->willReturn('second');
+
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->exactly(2))
+            ->method('addMessage')
+            ->withConsecutive(['first', '\\Seen'], ['second', '\\Seen'])
+            ->willReturn(true);
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->method('getMailbox')->with('Sent')->willReturn($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->once())
+            ->method('connect')
+            ->willReturn($imapConnection);
+
+        $this->assertTrue($this->driver($connection)->sendMessages(
+            $this->messageIterator([$firstMessage, $secondMessage])
+        ));
+    }
+
+    public function testDeleteMessagesUsesInjectedConnection(): void
+    {
+        $firstMessage = $this->createMock(MessageInterface::class);
+        $firstMessage->expects($this->once())->method('delete');
+        $secondMessage = $this->createMock(MessageInterface::class);
+        $secondMessage->expects($this->once())->method('delete');
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->expects($this->once())->method('expunge');
+
+        $this->driver($connection)->deleteMessages($this->messageIterator([$firstMessage, $secondMessage]));
     }
 
     public function testGetMessagesDelegatesToMailbox(): void

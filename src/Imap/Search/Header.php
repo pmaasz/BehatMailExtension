@@ -14,6 +14,18 @@ final class Header implements ConditionInterface
 
     public function toString(): string
     {
-        return sprintf('HEADER %s "%s"', $this->field, $this->value);
+        if (1 !== preg_match('/^[A-Za-z0-9][A-Za-z0-9._-]*$/', $this->field)) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid IMAP header field name "%s".', $this->field)
+            );
+        }
+
+        if (preg_match('/[\r\n]/', $this->value)) {
+            throw new \InvalidArgumentException('IMAP header value must not contain CR or LF characters.');
+        }
+
+        $value = str_replace(['\\', '"'], ['\\\\', '\\"'], $this->value);
+
+        return sprintf('HEADER %s "%s"', $this->field, $value);
     }
 }

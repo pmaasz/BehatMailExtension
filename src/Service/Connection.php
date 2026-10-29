@@ -42,10 +42,17 @@ class Connection implements ConnectionInterface
 
         if ($this->connected && null !== $this->connection) {
             if ($config === $this->connectedConfig) {
-                return $this->connection;
-            }
+                try {
+                    if ($this->connection->ping()) {
+                        return $this->connection;
+                    }
+                } catch (\Throwable) {
+                }
 
-            $this->close();
+                $this->reset();
+            } else {
+                $this->close();
+            }
         }
 
         try {
@@ -131,6 +138,17 @@ class Connection implements ConnectionInterface
             'password' => $config['password'],
             'server' => $config['server'],
         ];
+    }
+
+    private function reset(): void
+    {
+        if (null !== $this->connection) {
+            $this->closeUnhealthyConnection($this->connection);
+        }
+
+        $this->connection = null;
+        $this->connected = false;
+        $this->connectedConfig = null;
     }
 
     private function closeUnhealthyConnection(ImapConnectionInterface $connection): void

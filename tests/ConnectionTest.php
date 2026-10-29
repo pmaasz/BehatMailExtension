@@ -22,10 +22,11 @@ class ConnectionTest extends TestCase
         return new Connection($server, 'imap.example.com');
     }
 
-    public function testConnectAuthenticatesAndCachesConnection(): void
+    public function testConnectAuthenticatesAndReusesHealthyConnection(): void
     {
         $imapConnection = $this->createMock(ConnectionInterface::class);
-        $imapConnection->expects($this->once())->method('ping')->willReturn(true);
+        $imapConnection->expects($this->exactly(2))->method('ping')->willReturn(true);
+        $imapConnection->expects($this->never())->method('close');
 
         $server = $this->createMock(ServerInterface::class);
         $server->expects($this->once())
@@ -37,6 +38,60 @@ class ConnectionTest extends TestCase
 
         $this->assertSame($imapConnection, $connection->connect($this->config()));
         $this->assertSame($imapConnection, $connection->connect($this->config()));
+    }
+
+    public function testFailedPingClosesStaleConnectionAndReauthenticates(): void
+    {
+        $staleConnection = $this->createMock(ConnectionInterface::class);
+        $staleConnection->expects($this->exactly(2))
+            ->method('ping')
+            ->willReturnOnConsecutiveCalls(true, false);
+        $staleConnection->expects($this->once())->method('close')->willReturn(true);
+
+        $freshConnection = $this->createMock(ConnectionInterface::class);
+        $freshConnection->expects($this->once())->method('ping')->willReturn(true);
+
+        $server = $this->createMock(ServerInterface::class);
+        $server->expects($this->exactly(2))
+            ->method('authenticate')
+            ->willReturnOnConsecutiveCalls($staleConnection, $freshConnection);
+
+        $connection = $this->connection($server);
+
+        $this->assertSame($staleConnection, $connection->connect($this->config()));
+        $this->assertSame($freshConnection, $connection->connect($this->config()));
+    }
+
+    public function testThrowingPingClosesStaleConnectionAndReauthenticates(): void
+    {
+        $pingCalls = 0;
+
+        $staleConnection = $this->createMock(ConnectionInterface::class);
+        $staleConnection->expects($this->exactly(2))
+            ->method('ping')
+            ->willReturnCallback(static function () use (&$pingCalls): bool {
+                ++$pingCalls;
+
+                if (1 === $pingCalls) {
+                    return true;
+                }
+
+                throw new \RuntimeException('Connection lost');
+            });
+        $staleConnection->expects($this->once())->method('close')->willReturn(true);
+
+        $freshConnection = $this->createMock(ConnectionInterface::class);
+        $freshConnection->expects($this->once())->method('ping')->willReturn(true);
+
+        $server = $this->createMock(ServerInterface::class);
+        $server->expects($this->exactly(2))
+            ->method('authenticate')
+            ->willReturnOnConsecutiveCalls($staleConnection, $freshConnection);
+
+        $connection = $this->connection($server);
+
+        $this->assertSame($staleConnection, $connection->connect($this->config()));
+        $this->assertSame($freshConnection, $connection->connect($this->config()));
     }
 
     public function testChangedCredentialsCloseAndReconnect(): void

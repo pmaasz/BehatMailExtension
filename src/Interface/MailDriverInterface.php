@@ -32,7 +32,7 @@ interface MailDriverInterface
 
     public function deleteMailbox(MailboxInterface $mailbox): void;
 
-    public function getMessages(MailboxInterface $mailbox, ConditionInterface $search): MessageIteratorInterface;
+    public function getMessages(MailboxInterface $mailbox, ?ConditionInterface $search = null): MessageIteratorInterface;
 
     public function getMessage(MailboxInterface $mailbox, int $key): MessageInterface;
 

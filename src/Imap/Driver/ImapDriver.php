@@ -86,23 +86,31 @@ class ImapDriver implements MailDriverInterface
 
     public function sendMessage(MessageInterface $message): void
     {
+        $sentMailbox = $this->sentMailbox();
+
         /** @var MailboxInterface $mailbox */
-        $mailbox = $this->connection->connect($this->config)->getMailbox('Sent');
+        $mailbox = $this->connection->connect($this->config)->getMailbox($sentMailbox);
 
         if (!$mailbox->addMessage($message->getRawMessage(), '\\Seen')) {
-            throw new \RuntimeException('Failed to append message to mailbox "Sent".');
+            throw new \RuntimeException(
+                sprintf('Failed to append message to mailbox "%s".', $sentMailbox)
+            );
         }
     }
 
     public function sendMessages(MessageIteratorInterface $messages): true
     {
+        $sentMailbox = $this->sentMailbox();
+
         /** @var MailboxInterface $mailbox */
-        $mailbox = $this->connection->connect($this->config)->getMailbox('Sent');
+        $mailbox = $this->connection->connect($this->config)->getMailbox($sentMailbox);
 
         foreach($messages as $message)
         {
             if (!$mailbox->addMessage($message->getRawMessage(), '\\Seen')) {
-                throw new \RuntimeException('Failed to append message to mailbox "Sent".');
+                throw new \RuntimeException(
+                    sprintf('Failed to append message to mailbox "%s".', $sentMailbox)
+                );
             }
         }
 
@@ -136,6 +144,11 @@ class ImapDriver implements MailDriverInterface
         $search->addCondition(new Header($field, $value));
 
         return $mailbox->getMessages($search);
+    }
+
+    private function sentMailbox(): string
+    {
+        return $this->config['sent_mailbox'] ?? 'Sent';
     }
 
     public function moveMessage(MailboxInterface $mailbox, MessageInterface $message): void

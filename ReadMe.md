@@ -63,6 +63,9 @@ default:
             password: 'secret'                  # required
 ````
 
+`sent_mailbox` optionally selects the mailbox used by `sendMessage()` and `sendMessages()`.
+It defaults to `Sent`; for Gmail, use `'[Gmail]/Sent Mail'`.
+
 ## Usage ##
 
 Access the mail property from your feature context to test any emails sent.

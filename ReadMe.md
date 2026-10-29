@@ -73,10 +73,15 @@ Access the mail property from your feature context to test any emails sent.
      */
     public function iShouldReceiveAWelcomeEmail()
     {
-        $message = $this->mail->getMessages();
+        $mailbox = $this->mail->getMailbox('INBOX');
+        $messages = $this->mail->getMessages($mailbox);
+        $message = $messages->current();
 
-        PHPUnit_Framework_Assert::assertEquals('Welcome!', $message->getSubject());
-        PHPUnit_Framework_Assert::assertContains('Please confirm your account', $message->getBodyText());
+        \PHPUnit\Framework\Assert::assertSame('Welcome!', $message->getSubject());
+        \PHPUnit\Framework\Assert::assertStringContainsString(
+            'Please confirm your account',
+            $message->getBodyText()
+        );
     }
 ````    
     
@@ -145,7 +150,7 @@ The mail driver will return a message object with the following API:
     <li>markAsSeen()</li>
     <li>setFlag()</li>
     <li>clearFlag()</li>
-    <li>getAttachements()</li>
+    <li>getAttachments()</li>
 </ul>
 
 ## Star History

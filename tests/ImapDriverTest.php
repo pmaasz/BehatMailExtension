@@ -78,13 +78,13 @@ class ImapDriverTest extends TestCase
         $this->assertSame($mailboxes, (new ImapDriver($config, $connection))->getMailboxes());
     }
 
-    public function testDeleteMessageUsesInjectedConnection(): void
+    public function testDeleteMessageDoesNotExpungeMailbox(): void
     {
         $message = $this->createMock(MessageInterface::class);
         $message->expects($this->once())->method('delete');
 
         $connection = $this->createMock(ConnectionInterface::class);
-        $connection->expects($this->once())->method('expunge');
+        $connection->expects($this->never())->method('expunge');
 
         $this->driver($connection)->deleteMessage($message);
     }
@@ -213,7 +213,7 @@ class ImapDriverTest extends TestCase
         ));
     }
 
-    public function testDeleteMessagesUsesInjectedConnection(): void
+    public function testDeleteMessagesDoesNotExpungeMailbox(): void
     {
         $firstMessage = $this->createMock(MessageInterface::class);
         $firstMessage->expects($this->once())->method('delete');
@@ -221,7 +221,7 @@ class ImapDriverTest extends TestCase
         $secondMessage->expects($this->once())->method('delete');
 
         $connection = $this->createMock(ConnectionInterface::class);
-        $connection->expects($this->once())->method('expunge');
+        $connection->expects($this->never())->method('expunge');
 
         $this->driver($connection)->deleteMessages($this->messageIterator([$firstMessage, $secondMessage]));
     }

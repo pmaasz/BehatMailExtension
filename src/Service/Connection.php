@@ -102,7 +102,9 @@ class Connection implements ConnectionInterface
             return;
         }
 
-        $this->connection->expunge();
+        if (false === $this->connection->expunge()) {
+            throw new \RuntimeException('IMAP expunge failed.');
+        }
     }
 
     public function close(): void

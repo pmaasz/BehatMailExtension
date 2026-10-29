@@ -203,13 +203,10 @@ class ImapDriver implements MailDriverInterface
         foreach($messages as $message) {
             $message->delete();
         }
-
-        $this->connection->expunge();
     }
 
     public function deleteMessage(MessageInterface $message): void
     {
         $message->delete();
-        $this->connection->expunge();
     }
 }

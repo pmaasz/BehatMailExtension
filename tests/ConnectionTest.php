@@ -184,6 +184,23 @@ class ConnectionTest extends TestCase
         $connection->expunge();
     }
 
+    public function testExpungeFailureThrows(): void
+    {
+        $imapConnection = $this->createMock(ConnectionInterface::class);
+        $imapConnection->method('ping')->willReturn(true);
+        $imapConnection->expects($this->once())->method('expunge')->willReturn(false);
+
+        $server = $this->createMock(ServerInterface::class);
+        $server->method('authenticate')->willReturn($imapConnection);
+
+        $connection = $this->connection($server);
+        $connection->connect($this->config());
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageMatches('/expunge failed/');
+        $connection->expunge();
+    }
+
     public function testCloseClosesConnectionAndAllowsReconnect(): void
     {
         $firstConnection = $this->createMock(ConnectionInterface::class);

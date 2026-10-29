@@ -137,6 +137,56 @@ class ImapDriverTest extends TestCase
         $this->driver($connection)->sendMessage($message);
     }
 
+    public function testSendMessageThrowsWhenAppendFails(): void
+    {
+        $message = $this->createMock(MessageInterface::class);
+        $message->method('getRawMessage')->willReturn('raw-message');
+
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->once())
+            ->method('addMessage')
+            ->with('raw-message', '\\Seen')
+            ->willReturn(false);
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->method('getMailbox')->with('Sent')->willReturn($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->method('connect')->willReturn($imapConnection);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageMatches('/Failed to append message/');
+        $this->driver($connection)->sendMessage($message);
+    }
+
+    public function testSendMessagesThrowsWhenAppendFails(): void
+    {
+        $firstMessage = $this->createMock(MessageInterface::class);
+        $firstMessage->method('getRawMessage')->willReturn('first');
+        $secondMessage = $this->createMock(MessageInterface::class);
+        $secondMessage->method('getRawMessage')->willReturn('second');
+        $thirdMessage = $this->createMock(MessageInterface::class);
+        $thirdMessage->method('getRawMessage')->willReturn('third');
+
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->exactly(2))
+            ->method('addMessage')
+            ->withConsecutive(['first', '\\Seen'], ['second', '\\Seen'])
+            ->willReturnOnConsecutiveCalls(true, false);
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->method('getMailbox')->with('Sent')->willReturn($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->method('connect')->willReturn($imapConnection);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessageMatches('/Failed to append message/');
+        $this->driver($connection)->sendMessages(
+            $this->messageIterator([$firstMessage, $secondMessage, $thirdMessage])
+        );
+    }
+
     public function testSendMessagesUsesInjectedConnection(): void
     {
         $firstMessage = $this->createMock(MessageInterface::class);

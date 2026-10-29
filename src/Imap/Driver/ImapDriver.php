@@ -138,8 +138,26 @@ class ImapDriver implements MailDriverInterface
         $message->move($mailbox);
     }
 
-    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir): void
+    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir, bool $overwrite = false): void
     {
+        if ('' === trim($downloadDir)) {
+            throw new \InvalidArgumentException('Attachment download directory must not be empty.');
+        }
+
+        if (!is_dir($downloadDir)) {
+            throw new \InvalidArgumentException(
+                sprintf('Attachment download directory "%s" does not exist or is not a directory.', $downloadDir)
+            );
+        }
+
+        if (!is_writable($downloadDir)) {
+            throw new \InvalidArgumentException(
+                sprintf('Attachment download directory "%s" is not writable.', $downloadDir)
+            );
+        }
+
+        $downloadDir = rtrim($downloadDir, '/\\') . DIRECTORY_SEPARATOR;
+
         foreach($message->getAttachments() as $attachment) {
             $filename = $attachment->getFilename();
 
@@ -153,16 +171,25 @@ class ImapDriver implements MailDriverInterface
                 || $safeFilename === '.'
                 || $safeFilename === '..'
                 || str_contains($filename, "\0")
-                || str_contains($filename, '..')
             ) {
                 throw new \InvalidArgumentException(
                     sprintf('Unsafe attachment filename "%s".', $filename)
                 );
             }
 
-            $downloadDir = rtrim($downloadDir, '/\\') . DIRECTORY_SEPARATOR;
+            $path = $downloadDir . $safeFilename;
 
-            file_put_contents($downloadDir . $safeFilename, $attachment->getDecodedContent());
+            if (!$overwrite && file_exists($path)) {
+                throw new \RuntimeException(
+                    sprintf('Attachment "%s" already exists in "%s".', $safeFilename, $downloadDir)
+                );
+            }
+
+            if (false === @file_put_contents($path, $attachment->getDecodedContent())) {
+                throw new \RuntimeException(
+                    sprintf('Failed to write attachment "%s" to "%s".', $safeFilename, $downloadDir)
+                );
+            }
         }
     }
 

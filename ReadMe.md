@@ -55,12 +55,12 @@ Add the MailExtension to your behat.yaml file:
 default:
     extensions:
         BehatMailExtension\ServiceContainer\MailExtension:
-            driver: imap //required
-            server: 'imap.gmail.com' //required
-            port: //defaults to '993' //required
-            flags: //defaults to '/imap/ssl/validate-cert' //required 
-            username: //required
-            password: //required
+            driver: imap                        # optional, defaults to "imap"
+            server: 'imap.gmail.com'            # optional, defaults to "localhost"
+            port: 993                           # optional, defaults to 993
+            flags: '/imap/ssl/validate-cert'    # optional, defaults to "/imap/ssl/validate-cert"
+            username: 'you@example.com'         # required
+            password: 'secret'                  # required
 ````
 
 ## Usage ##
@@ -123,7 +123,7 @@ These methods are described in the MailDriverInterface.
        deleteMessage()
     </li>
     <li>
-        deleteMessages() (This is called automatically after scenarios tagged @mail)
+        deleteMessages() (no automatic cleanup is performed after scenarios)
     </li>
 </ul>
 

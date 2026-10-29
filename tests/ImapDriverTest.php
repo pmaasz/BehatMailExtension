@@ -362,6 +362,143 @@ class ImapDriverTest extends TestCase
         }
     }
 
+    /**
+     * @dataProvider invalidDestinationProvider
+     */
+    public function testDownloadMessageAttachmentsRejectsInvalidDestination(string $destination): void
+    {
+        $driver = $this->driver();
+
+        $this->expectException(\InvalidArgumentException::class);
+        $driver->downloadMessageAttachments($this->messageWithAttachment('a.txt'), $destination);
+    }
+
+    public function invalidDestinationProvider(): array
+    {
+        return [
+            'empty' => [''],
+            'missing' => [sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_missing_' . uniqid('', true)],
+        ];
+    }
+
+    public function testDownloadMessageAttachmentsRejectsNonDirectoryDestination(): void
+    {
+        $driver = $this->driver();
+        $destination = tempnam(sys_get_temp_dir(), 'imap_destination_');
+
+        try {
+            $this->expectException(\InvalidArgumentException::class);
+            $driver->downloadMessageAttachments($this->messageWithAttachment('a.txt'), $destination);
+        } finally {
+            @unlink($destination);
+        }
+    }
+
+    public function testDownloadMessageAttachmentsRejectsUnwritableDestination(): void
+    {
+        $driver = $this->driver();
+
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
+        mkdir($downloadDir, 0777, true);
+        @chmod($downloadDir, 0555);
+
+        try {
+            if (is_writable($downloadDir)) {
+                $this->markTestSkipped('Cannot make a directory unwritable as the current user.');
+            }
+
+            $this->expectException(\InvalidArgumentException::class);
+            $driver->downloadMessageAttachments($this->messageWithAttachment('a.txt'), $downloadDir);
+        } finally {
+            @chmod($downloadDir, 0777);
+            $this->removeDir($downloadDir);
+        }
+    }
+
+    public function testDownloadMessageAttachmentsThrowsWhenWriteFails(): void
+    {
+        $driver = $this->driver();
+
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
+        mkdir($downloadDir, 0777, true);
+        mkdir($downloadDir . DIRECTORY_SEPARATOR . 'a.txt');
+
+        try {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessageMatches('/Failed to write attachment/');
+            $driver->downloadMessageAttachments($this->messageWithAttachment('a.txt'), $downloadDir, true);
+        } finally {
+            $this->removeDir($downloadDir);
+        }
+    }
+
+    public function testDownloadMessageAttachmentsDoesNotOverwriteExistingFile(): void
+    {
+        $driver = $this->driver();
+
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
+        mkdir($downloadDir, 0777, true);
+        $path = $downloadDir . DIRECTORY_SEPARATOR . 'invoice.pdf';
+        file_put_contents($path, 'original');
+
+        try {
+            try {
+                $driver->downloadMessageAttachments(
+                    $this->messageWithAttachment('invoice.pdf', 'replacement'),
+                    $downloadDir
+                );
+                $this->fail('Expected RuntimeException was not thrown.');
+            } catch (\RuntimeException $exception) {
+                $this->assertStringContainsString('already exists', $exception->getMessage());
+            }
+
+            $this->assertSame('original', file_get_contents($path));
+        } finally {
+            $this->removeDir($downloadDir);
+        }
+    }
+
+    public function testDownloadMessageAttachmentsOverwritesExistingFileWhenRequested(): void
+    {
+        $driver = $this->driver();
+
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
+        mkdir($downloadDir, 0777, true);
+        $path = $downloadDir . DIRECTORY_SEPARATOR . 'invoice.pdf';
+        file_put_contents($path, 'original');
+
+        try {
+            $driver->downloadMessageAttachments(
+                $this->messageWithAttachment('invoice.pdf', 'replacement'),
+                $downloadDir,
+                true
+            );
+
+            $this->assertSame('replacement', file_get_contents($path));
+        } finally {
+            $this->removeDir($downloadDir);
+        }
+    }
+
+    public function testDownloadMessageAttachmentsAcceptsDoubleDotsInFilename(): void
+    {
+        $driver = $this->driver();
+
+        $downloadDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'imap_dl_' . uniqid('', true);
+        mkdir($downloadDir, 0777, true);
+
+        try {
+            $driver->downloadMessageAttachments($this->messageWithAttachment('report..pdf', 'content'), $downloadDir);
+
+            $this->assertSame(
+                'content',
+                file_get_contents($downloadDir . DIRECTORY_SEPARATOR . 'report..pdf')
+            );
+        } finally {
+            $this->removeDir($downloadDir);
+        }
+    }
+
     public function testDownloadMessageAttachmentsDoesNotWriteOutsideOnTraversal(): void
     {
         $driver = $this->driver();
@@ -395,6 +532,18 @@ class ImapDriverTest extends TestCase
         } finally {
             $this->removeDir($base);
         }
+    }
+
+    private function messageWithAttachment(string $filename, string $content = 'content'): MessageInterface
+    {
+        $attachment = $this->createMock(AttachmentInterface::class);
+        $attachment->method('getFilename')->willReturn($filename);
+        $attachment->method('getDecodedContent')->willReturn($content);
+
+        $message = $this->createMock(MessageInterface::class);
+        $message->method('getAttachments')->willReturn([$attachment]);
+
+        return $message;
     }
 
     private function removeDir($dir): void

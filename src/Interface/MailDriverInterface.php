@@ -55,7 +55,7 @@ interface MailDriverInterface
 
     public function moveMessage(MailboxInterface $mailbox, MessageInterface $message);
 
-    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir);
+    public function downloadMessageAttachments(MessageInterface $message, string $downloadDir, bool $overwrite = false): void;
 
     public function deleteMessages(MessageIteratorInterface $messages);
 

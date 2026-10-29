@@ -88,7 +88,10 @@ class ImapDriver implements MailDriverInterface
     {
         /** @var MailboxInterface $mailbox */
         $mailbox = $this->connection->connect($this->config)->getMailbox('Sent');
-        $mailbox->addMessage($message->getRawMessage(), '\\Seen');
+
+        if (!$mailbox->addMessage($message->getRawMessage(), '\\Seen')) {
+            throw new \RuntimeException('Failed to append message to mailbox "Sent".');
+        }
     }
 
     public function sendMessages(MessageIteratorInterface $messages): true
@@ -98,7 +101,9 @@ class ImapDriver implements MailDriverInterface
 
         foreach($messages as $message)
         {
-            $mailbox->addMessage($message->getRawMessage(), '\\Seen');
+            if (!$mailbox->addMessage($message->getRawMessage(), '\\Seen')) {
+                throw new \RuntimeException('Failed to append message to mailbox "Sent".');
+            }
         }
 
         return true;

@@ -80,6 +80,7 @@ class MailExtensionTest extends TestCase
         $this->assertSame('localhost', $config['server']);
         $this->assertSame(993, $config['port']);
         $this->assertSame('/imap/ssl/validate-cert', $config['flags']);
+        $this->assertSame('Sent', $config['sent_mailbox']);
         $this->assertSame('user', $config['username']);
         $this->assertSame('secret', $config['password']);
     }

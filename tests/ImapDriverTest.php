@@ -47,16 +47,17 @@ class ImapDriverTest extends TestCase
         return $iterator;
     }
 
-    private function config(): array
+    private function config(array $overrides = []): array
     {
-        return [
+        return array_merge([
             'driver' => 'imap',
             'server' => 'localhost',
             'port' => 993,
             'flags' => '/imap/ssl/validate-cert',
+            'sent_mailbox' => 'Sent',
             'username' => 'user',
             'password' => 'secret',
-        ];
+        ], $overrides);
     }
 
     public function testGetMailboxesUsesInjectedConnection(): void
@@ -159,6 +160,30 @@ class ImapDriverTest extends TestCase
         $this->driver($connection)->sendMessage($message);
     }
 
+    public function testSendMessageUsesConfiguredSentMailbox(): void
+    {
+        $config = $this->config(['sent_mailbox' => '[Gmail]/Sent Mail']);
+        $message = $this->createMock(MessageInterface::class);
+        $message->method('getRawMessage')->willReturn('raw-message');
+
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->once())
+            ->method('addMessage')
+            ->with('raw-message', '\\Seen')
+            ->willReturn(true);
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->expects($this->once())
+            ->method('getMailbox')
+            ->with('[Gmail]/Sent Mail')
+            ->willReturn($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->method('connect')->with($config)->willReturn($imapConnection);
+
+        (new ImapDriver($config, $connection))->sendMessage($message);
+    }
+
     public function testSendMessagesThrowsWhenAppendFails(): void
     {
         $firstMessage = $this->createMock(MessageInterface::class);
@@ -184,6 +209,32 @@ class ImapDriverTest extends TestCase
         $this->expectExceptionMessageMatches('/Failed to append message/');
         $this->driver($connection)->sendMessages(
             $this->messageIterator([$firstMessage, $secondMessage, $thirdMessage])
+        );
+    }
+
+    public function testSendMessagesUsesConfiguredSentMailbox(): void
+    {
+        $config = $this->config(['sent_mailbox' => '[Gmail]/Sent Mail']);
+        $message = $this->createMock(MessageInterface::class);
+        $message->method('getRawMessage')->willReturn('raw-message');
+
+        $mailbox = $this->createMock(MailboxInterface::class);
+        $mailbox->expects($this->once())
+            ->method('addMessage')
+            ->with('raw-message', '\\Seen')
+            ->willReturn(true);
+
+        $imapConnection = $this->createMock(ImapConnectionInterface::class);
+        $imapConnection->expects($this->once())
+            ->method('getMailbox')
+            ->with('[Gmail]/Sent Mail')
+            ->willReturn($mailbox);
+
+        $connection = $this->createMock(ConnectionInterface::class);
+        $connection->method('connect')->with($config)->willReturn($imapConnection);
+
+        $this->assertTrue(
+            (new ImapDriver($config, $connection))->sendMessages($this->messageIterator([$message]))
         );
     }
 
